@@ -39,13 +39,7 @@ public class MaterialDAO {
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                MaterialVO m = new MaterialVO();
-                m.setId(rs.getInt("id"));
-                m.setAssociadoId(rs.getInt("associado_id"));
-                m.setNome(rs.getString("nome"));
-                m.setQuantidade(rs.getFloat("quantidade"));
-                m.setUnidadeMedida(rs.getString("unidade_medida"));
-                lista.add(m);
+                lista.add(resultSetToMaterial(rs));
             }
 
             rs.close();
@@ -105,12 +99,7 @@ public class MaterialDAO {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) { // se encontrou algum registro
-                material = new MaterialVO();
-                material.setId(rs.getInt("id"));
-                material.setAssociadoId(rs.getInt("associado_id"));
-                material.setNome(rs.getString("nome"));
-                material.setQuantidade(rs.getFloat("quantidade"));
-                material.setUnidadeMedida(rs.getString("unidade_medida"));
+                material = resultSetToMaterial(rs);
             }
 
             rs.close();
@@ -120,5 +109,15 @@ public class MaterialDAO {
         }
 
         return material; // retorna o objeto ou null se não encontrou
+    }
+
+    private MaterialVO resultSetToMaterial(ResultSet rs) throws SQLException {
+        MaterialVO material = new MaterialVO();
+        material.setId(rs.getInt("id"));
+        material.setAssociadoId(rs.getInt("associado_id"));
+        material.setNome(rs.getString("nome"));
+        material.setQuantidade(rs.getFloat("quantidade"));
+        material.setUnidadeMedida(rs.getString("unidade_medida"));
+        return material;
     }
 }

@@ -40,13 +40,7 @@ public class AtividadeDAO {
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                AtividadeVO a = new AtividadeVO();
-                a.setId(rs.getInt("id"));
-                a.setNomeAtividade(rs.getString("nome_atividade"));
-                a.setDescricao(rs.getString("descricao"));
-                a.setObervacoes(rs.getString("observacoes"));
-                a.setStatus(rs.getString("status"));
-                lista.add(a);
+                lista.add(resultSetToAtividade(rs));
             }
 
             rs.close();
@@ -107,12 +101,7 @@ public class AtividadeDAO {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) { // se encontrou algum registro
-                atividade = new AtividadeVO();
-                atividade.setId(rs.getInt("id"));
-                atividade.setNomeAtividade(rs.getString("nome_atividade"));
-                atividade.setDescricao(rs.getString("descricao"));
-                atividade.setObervacoes(rs.getString("observacoes"));
-                atividade.setStatus(rs.getString("status"));
+                atividade = resultSetToAtividade(rs);
             }
 
             rs.close();
@@ -123,5 +112,15 @@ public class AtividadeDAO {
         }
 
         return atividade; // retorna o objeto ou null se não encontrou
+    }
+
+    private AtividadeVO resultSetToAtividade(ResultSet rs) throws SQLException {
+        AtividadeVO atividade = new AtividadeVO();
+        atividade.setId(rs.getInt("id"));
+        atividade.setNomeAtividade(rs.getString("nome_atividade"));
+        atividade.setDescricao(rs.getString("descricao"));
+        atividade.setObervacoes(rs.getString("observacoes"));
+        atividade.setStatus(rs.getString("status"));
+        return atividade;
     }
 }
