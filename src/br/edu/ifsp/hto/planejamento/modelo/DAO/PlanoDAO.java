@@ -1,0 +1,242 @@
+package br.edu.ifsp.hto.planejamento.modelo.DAO;
+
+import java.sql.*;
+import java.util.*;
+
+import br.edu.ifsp.hto.planejamento.modelo.VO.CanteiroVO;
+import br.edu.ifsp.hto.planejamento.modelo.VO.PlanoComCanteirosVO;
+import br.edu.ifsp.hto.planejamento.modelo.VO.PlanoVO;
+
+public class PlanoDAO {
+
+    /**
+     * Adiciona um novo plano no banco de dados
+     * 
+     * @param plano objeto do tipo {@code PlanoVO}
+     */
+    public void inserir(PlanoVO plano) {
+        try {
+            Connection conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/PlanejamentoProducao",
+                    "postegres", " ");
+
+            String sql = "INSERT INTO plano (especie_id, talhao_area_id, talhao_id, nome_plano, descricao, data_inicio, data_fim, observacoes, area_cultivo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, plano.getEspecieId());
+            stmt.setInt(2, plano.getTalhaoAreaId());
+            stmt.setInt(3, plano.getTalhaoId());
+            stmt.setString(4, plano.getNomePlano());
+            stmt.setString(5, plano.getDescricao());
+            stmt.setDate(6, plano.getDataInicio());
+            stmt.setDate(7, plano.getDataFim());
+            stmt.setString(8, plano.getObservacoes());
+            stmt.setFloat(9, plano.getAreaCultivo());
+            stmt.executeUpdate();
+
+            stmt.close();
+            conn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Busca todos os planos pertencentes a um talhão
+     * 
+     * @param id identificador do talhão
+     * 
+     * @return um {@code ArrayList} contendo {@code PlanoVO} como elementos
+     */
+    public ArrayList<PlanoVO> buscarPlanosPorTalhao(int id) {
+        ArrayList<PlanoVO> planos = new ArrayList<>();
+
+        try {
+            Connection conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/PlanejamentoProducao",
+                    "postegres", " ");
+
+            String sql = "SELECT * FROM plano WHERE talhao_id = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                planos.add(resultSetToPlano(rs));
+            }
+
+            stmt.close();
+            rs.close();
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return planos;
+    }
+
+    /**
+     * Lista todos os planos presentes no banco de dados
+     * 
+     * @return um {@code ArrayList} contendo {@code PlanoVO} como elementos
+     */
+    public List<PlanoVO> listarTodos() {
+        List<PlanoVO> lista = new ArrayList<>();
+
+        try {
+            Connection conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/PlanejamentoProducao",
+                    "postegres", " ");
+
+            String sql = "SELECT * FROM plano";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                lista.add(resultSetToPlano(rs));
+            }
+
+            rs.close();
+            stmt.close();
+            conn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return lista;
+    }
+
+    /**
+     * Atualiza um plano presente no banco de dados
+     * 
+     * @param talhao objeto {@code PlanoVO} contendo os novos dados
+     */
+    public void atualizar(PlanoVO plano) {
+        try {
+            Connection conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/PlanejamentoProducao",
+                    "postegres", " ");
+
+            String sql = "UPDATE Plano SET especie_id = ?, talhao_area_id = ?, talhao_id = ?, nome_plano = ?, descricao = ?, data_inicio = ?, data_fim = ?, observacoes = ?, area_cultivo = ? WHERE id = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, plano.getEspecieId());
+            stmt.setInt(2, plano.getTalhaoAreaId());
+            stmt.setInt(3, plano.getTalhaoId());
+            stmt.setString(4, plano.getNomePlano());
+            stmt.setString(5, plano.getDescricao());
+            stmt.setDate(6, plano.getDataInicio());
+            stmt.setDate(7, plano.getDataFim());
+            stmt.setString(8, plano.getObservacoes());
+            stmt.setFloat(9, plano.getAreaCultivo());
+            stmt.setInt(10, plano.getId());
+
+            stmt.executeUpdate();
+            stmt.close();
+            conn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Deleta um plano presente no banco de dados
+     * 
+     * @param id identificador do plano a ser excluido
+     */
+    public void deletar(int id) {
+        try {
+            Connection conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/PlanejamentoProducao",
+                    "postegres", " ");
+
+            String sql = "DELETE FROM plano WHERE id = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, id);
+
+            stmt.executeUpdate();
+            stmt.close();
+            conn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Busca um plano no banco de dados pelo id
+     * 
+     * @param id identificador do plano
+     * 
+     * @return um objeto do tipo {@code PlanoVO}
+     */
+    public PlanoVO buscarPorId(int id) {
+        PlanoVO plano = null;
+
+        try {
+            Connection conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/PlanejamentoProducao",
+                    "postegres", " ");
+
+            String sql = "SELECT * FROM plano WHERE id = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                plano = new PlanoVO();
+                plano.setId(rs.getInt("id"));
+                plano.setTalhaoId(rs.getInt("especie_id"));
+                plano.setTalhaoId(rs.getInt("talhao_area_id"));
+                plano.setTalhaoId(rs.getInt("talhao_id"));
+                plano.setNomePlano(rs.getString("nome_plano"));
+                plano.setDescricao(rs.getString("descricao"));
+                plano.setDataInicio(rs.getDate("data_inicio"));
+                plano.setDataFim(rs.getDate("data_fim"));
+                plano.setObservacoes(rs.getString("observacoes"));
+                plano.setAreaCultivo(rs.getFloat("area_cultivo"));
+            }
+
+            rs.close();
+            stmt.close();
+            conn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return plano;
+    }
+
+    /**
+     * Lista todos os planos que possuem canteiros
+     * 
+     * @param id identificador do plano
+     * 
+     * @return Um objeto do tipo {@code PlanoCanteiroVO}
+     */
+    public PlanoComCanteirosVO listarPlanoComCanteiros(int id) {
+        PlanoVO plano = buscarPorId(id);
+        CanteiroDAO canteiroDAO = new CanteiroDAO();
+        ArrayList<CanteiroVO> canteiros = canteiroDAO.buscarCanteirosPorPlano(id);
+
+        return new PlanoComCanteirosVO(plano, canteiros);
+    }
+
+    /**
+     * Retorna o plano presente no banco de dados contendo todas
+     * as suas informações
+     * 
+     * @param rs {@code ResultSet} contendo os atributos de {@code PlanoVO}
+     * 
+     * @return um objeto do tipo {@code PlanoVO}
+     * 
+     * @throws SQLException caso ocorra algum erro no acesso ao banco
+     */
+    private PlanoVO resultSetToPlano(ResultSet rs) throws SQLException {
+        PlanoVO plano = new PlanoVO();
+
+        plano.setId(rs.getInt("id"));
+        plano.setEspecieId(rs.getInt("especie_id"));
+        plano.setTalhaoAreaId(rs.getInt("talhao_area_id"));
+        plano.setTalhaoId(rs.getInt("talhao_id"));
+        plano.setNomePlano(rs.getString("nome_plano"));
+        plano.setDescricao(rs.getString("descricao"));
+        plano.setDataInicio(rs.getDate("data_inicio"));
+        plano.setDataFim(rs.getDate("data_fim"));
+        plano.setObservacoes(rs.getString("observacoes"));
+        plano.setAreaCultivo(rs.getFloat("area_cultivo"));
+
+        return plano;
+    }
+}
