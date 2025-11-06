@@ -150,7 +150,7 @@ public class TalhaoDAO {
         try {
             Connection conn = ConexaoDoProjeto.connect();
 
-            String sql = "SELECT * FROM canteiro WHERE area_id = ?";
+            String sql = "SELECT * FROM Talhao WHERE area_id = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();

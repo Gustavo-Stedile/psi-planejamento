@@ -10,9 +10,9 @@ import java.sql.SQLException;
  * TODO: implementar um arquivo que guarde essas informações!
  */
 public class ConexaoDoProjeto {
-    public static final String URL = "jdbc:postgresql://localhost:3306/planejamento_producao";
+    public static final String URL = "jdbc:postgresql://localhost:5432/planejamento";
     public static final String USER = "postgres";
-    public static final String PSWD = "";
+    public static final String PSWD = "root";
 
     public static Connection connect() throws SQLException {
         return DriverManager.getConnection(URL, USER, PSWD);

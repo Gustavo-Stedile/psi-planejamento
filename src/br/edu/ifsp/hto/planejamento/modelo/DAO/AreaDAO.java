@@ -19,7 +19,7 @@ public class AreaDAO {
         try {
             Connection conn = ConexaoDoProjeto.connect();
 
-            String sql = "INSERT INTO area (associado_id, nome, area_total, area_utilizada, ph, area_m2) VALUES (?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO area (associado_id, nome, area_total, area_utilizada, ph) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, area.getAssociadoId());
             stmt.setString(2, area.getNome());

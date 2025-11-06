@@ -3,10 +3,31 @@ package br.edu.ifsp.hto.planejamento.modelo.VO;
 public class AreaVO {
     private int id;
     private int associadoId;
-    public String nome;
-    public float areaTotal;
-    public float areaUtilizada;
-    public float ph;
+    private String nome;
+    private float areaTotal;
+    private float areaUtilizada;
+    private float ph;
+
+    public AreaVO() {
+
+    }
+
+    public AreaVO(int associadoId, String nome, float areaTotal, float areaUtilizada, float ph) {
+        this.associadoId = associadoId;
+        this.nome = nome;
+        this.areaTotal = areaTotal;
+        this.areaUtilizada = areaUtilizada;
+        this.ph = ph;
+    }
+
+    public AreaVO(int id, int associadoId, String nome, float areaTotal, float areaUtilizada, float ph) {
+        this.id = id;
+        this.associadoId = associadoId;
+        this.nome = nome;
+        this.areaTotal = areaTotal;
+        this.areaUtilizada = areaUtilizada;
+        this.ph = ph;
+    }
 
     public int getId() {
         return id;
