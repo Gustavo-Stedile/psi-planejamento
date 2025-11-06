@@ -15,7 +15,7 @@ public class CanteiroDAO {
         try {
             Connection conn = ConexaoDoProjeto.connect();
 
-            String sql = "INSERT INTO canteiro (plano_id, nome, area_canteriro_m2, observacoes, kg_gerados) VALUES (?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO canteiro (plano_id, nome, area_canteiro_m2, observacoes, kg_gerados) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, c.getPlanoId());
             stmt.setString(2, c.getNome());
@@ -114,7 +114,7 @@ public class CanteiroDAO {
         try {
             Connection conn = ConexaoDoProjeto.connect();
 
-            String sql = "UPDATE canteiro SET plano_id = ?, nome = ?, area_canteriro_m2 = ?, observacoes = ?, kg_gerados = ? WHERE id = ?";
+            String sql = "UPDATE canteiro SET plano_id = ?, nome = ?, area_canteiro_m2 = ?, observacoes = ?, kg_gerados = ? WHERE id = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, c.getPlanoId());
             stmt.setString(2, c.getNome());
@@ -153,7 +153,7 @@ public class CanteiroDAO {
         canteiro.setId(rs.getInt("id"));
         canteiro.setPlanoId(rs.getInt("plano_id"));
         canteiro.setNome(rs.getString("nome"));
-        canteiro.setAreaCanteiroM2(rs.getFloat("area_canteriro_m2"));
+        canteiro.setAreaCanteiroM2(rs.getFloat("area_canteiro_m2"));
         canteiro.setObservacoes(rs.getString("observacoes"));
         canteiro.setKgGerados(rs.getFloat("kg_gerados"));
 

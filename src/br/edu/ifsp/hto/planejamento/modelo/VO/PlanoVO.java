@@ -13,6 +13,35 @@ public class PlanoVO {
     private String observacoes;
     private float areaCultivo;
 
+    public PlanoVO() {
+        
+    }
+
+    public PlanoVO(int especieId, int talhaoId, String nomePlano, String descricao, Date dataInicio, Date dataFim,
+            String observacoes, float areaCultivo) {
+        this.especieId = especieId;
+        this.talhaoId = talhaoId;
+        this.nomePlano = nomePlano;
+        this.descricao = descricao;
+        this.dataInicio = dataInicio;
+        this.dataFim = dataFim;
+        this.observacoes = observacoes;
+        this.areaCultivo = areaCultivo;
+    }
+
+    public PlanoVO(int id, int especieId, int talhaoId, String nomePlano, String descricao, Date dataInicio,
+            Date dataFim, String observacoes, float areaCultivo) {
+        this.id = id;
+        this.especieId = especieId;
+        this.talhaoId = talhaoId;
+        this.nomePlano = nomePlano;
+        this.descricao = descricao;
+        this.dataInicio = dataInicio;
+        this.dataFim = dataFim;
+        this.observacoes = observacoes;
+        this.areaCultivo = areaCultivo;
+    }
+
     public int getId() {
         return id;
     }

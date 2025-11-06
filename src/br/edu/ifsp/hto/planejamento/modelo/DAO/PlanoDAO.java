@@ -19,7 +19,7 @@ public class PlanoDAO {
         try {
             Connection conn = ConexaoDoProjeto.connect();
 
-            String sql = "INSERT INTO plano (especie_id, talhao_id, nome_plano, descricao, data_inicio, data_fim, observacoes, area_cultivo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO plano (especie_id, talhao_id, nome_plano, descricao, data_inicio, data_fim, observacoes, area_cultivo) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, plano.getEspecieId());
             stmt.setInt(2, plano.getTalhaoId());
