@@ -8,6 +8,27 @@ public class TalhaoVO {
     private String observacoes;
     private String status;
 
+    public TalhaoVO() {
+
+    }
+
+    public TalhaoVO(int areaId, String nome, float areaTalhao, String observacoes, String status) {
+        this.areaId = areaId;
+        this.nome = nome;
+        this.areaTalhao = areaTalhao;
+        this.observacoes = observacoes;
+        this.status = status;
+    }
+
+    public TalhaoVO(int id, int areaId, String nome, float areaTalhao, String observacoes, String status) {
+        this.id = id;
+        this.areaId = areaId;
+        this.nome = nome;
+        this.areaTalhao = areaTalhao;
+        this.observacoes = observacoes;
+        this.status = status;
+    }
+
     public int getId() {
         return id;
     }
