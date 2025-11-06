@@ -4,6 +4,10 @@ import java.sql.*;
 import java.util.*;
 
 import br.edu.ifsp.hto.planejamento.modelo.ConexaoDoProjeto;
+import br.edu.ifsp.hto.planejamento.modelo.VO.AtividadeNoCanteiro;
+import br.edu.ifsp.hto.planejamento.modelo.VO.AtividadeNoCanteiroVO;
+import br.edu.ifsp.hto.planejamento.modelo.VO.AtividadeVO;
+import br.edu.ifsp.hto.planejamento.modelo.VO.CanteiroComAtividadesVO;
 import br.edu.ifsp.hto.planejamento.modelo.VO.CanteiroVO;
 import br.edu.ifsp.hto.planejamento.modelo.VO.PlanoComCanteirosVO;
 import br.edu.ifsp.hto.planejamento.modelo.VO.TalhaoVO;
@@ -11,7 +15,7 @@ import br.edu.ifsp.hto.planejamento.modelo.VO.TalhaoVO;
 public class CanteiroDAO {
 
     // 🔹 Inserir um novo Canteiro
-    public void inserir(CanteiroVO c) throws SQLException {
+    public void inserir(CanteiroVO c) {
         try {
             Connection conn = ConexaoDoProjeto.connect();
 
@@ -32,7 +36,7 @@ public class CanteiroDAO {
     }
 
     // 🔹 Listar todos os Canteiros
-    public List<CanteiroVO> listarTodos() throws SQLException {
+    public List<CanteiroVO> listarTodos() {
         List<CanteiroVO> canteiros = new ArrayList<>();
 
         try {
@@ -57,7 +61,7 @@ public class CanteiroDAO {
     }
 
     // 🔹 Buscar Canteiro por ID
-    public CanteiroVO buscarPorId(int id) throws SQLException {
+    public CanteiroVO buscarPorId(int id) {
         CanteiroVO canteiro = null;
 
         try {
@@ -82,7 +86,7 @@ public class CanteiroDAO {
         return canteiro;
     }
 
-    public ArrayList<CanteiroVO> buscarCanteirosPorPlano(int id) {
+    public ArrayList<CanteiroVO> buscarCanteirosDoPlano(int id) {
         ArrayList<CanteiroVO> canteiros = new ArrayList<>();
 
         try {
@@ -110,7 +114,7 @@ public class CanteiroDAO {
     }
 
     // 🔹 Atualizar Canteiro
-    public void atualizar(CanteiroVO c) throws SQLException {
+    public void atualizar(CanteiroVO c) {
         try {
             Connection conn = ConexaoDoProjeto.connect();
 
@@ -132,7 +136,7 @@ public class CanteiroDAO {
     }
 
     // 🔹 Deletar Canteiro
-    public void deletar(int id) throws SQLException {
+    public void deletar(int id) {
         try {
             Connection conn = ConexaoDoProjeto.connect();
 
@@ -145,6 +149,18 @@ public class CanteiroDAO {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public CanteiroComAtividadesVO buscarCanteiroComAtividades(int canteiroId) {
+        CanteiroVO canteiro = buscarPorId(canteiroId);
+
+        AtividadeDAO atividadeDAO = new AtividadeDAO();
+        ArrayList<AtividadeNoCanteiroVO> atividades = atividadeDAO.buscarAtividadesDoCanteiro(canteiroId);
+        
+        return new CanteiroComAtividadesVO(
+            canteiro, 
+            atividades
+        );
     }
 
     private CanteiroVO resultSetToCanteiro(ResultSet rs) throws SQLException {

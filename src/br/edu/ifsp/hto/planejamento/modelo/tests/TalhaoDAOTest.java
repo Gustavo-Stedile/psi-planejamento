@@ -15,7 +15,7 @@ public class TalhaoDAOTest {
         TalhaoVO novo = new TalhaoVO(3, 3, "Talhão Daora", 400, "muito daora", "sem nada");
         // talhaoDAO.inserir(novo);
 
-        TalhaoComPlanosVO tp = talhaoDAO.listarTalhaoComPlanos(1);
+        TalhaoComPlanosVO tp = talhaoDAO.buscarTalhaoComPlanos(1);
         tp.getPlanos().forEach(plano -> System.out.println("PLANO: " + plano.getNomePlano()));
 
         talhaoDAO.deletar(2);

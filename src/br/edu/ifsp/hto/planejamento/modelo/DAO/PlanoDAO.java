@@ -45,7 +45,7 @@ public class PlanoDAO {
      * 
      * @return um {@code ArrayList} contendo {@code PlanoVO} como elementos
      */
-    public ArrayList<PlanoVO> buscarPlanosPorTalhao(int id) {
+    public ArrayList<PlanoVO> buscarPlanosDoTalhao(int id) {
         ArrayList<PlanoVO> planos = new ArrayList<>();
 
         try {
@@ -188,10 +188,10 @@ public class PlanoDAO {
      * 
      * @return Um objeto do tipo {@code PlanoCanteiroVO}
      */
-    public PlanoComCanteirosVO listarPlanoComCanteiros(int id) {
+    public PlanoComCanteirosVO buscarPlanoComCanteiros(int id) {
         PlanoVO plano = buscarPorId(id);
         CanteiroDAO canteiroDAO = new CanteiroDAO();
-        ArrayList<CanteiroVO> canteiros = canteiroDAO.buscarCanteirosPorPlano(id);
+        ArrayList<CanteiroVO> canteiros = canteiroDAO.buscarCanteirosDoPlano(id);
 
         return new PlanoComCanteirosVO(plano, canteiros);
     }

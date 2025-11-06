@@ -129,10 +129,10 @@ public class TalhaoDAO {
      * 
      * @return Um objeto do tipo {@code TalhaoPlanoVO}
      */
-    public TalhaoComPlanosVO listarTalhaoComPlanos(int id) {
+    public TalhaoComPlanosVO buscarTalhaoComPlanos(int id) {
         TalhaoVO talhao = buscarPorId(id);
         PlanoDAO planoDAO = new PlanoDAO();
-        ArrayList<PlanoVO> planos = planoDAO.buscarPlanosPorTalhao(id);
+        ArrayList<PlanoVO> planos = planoDAO.buscarPlanosDoTalhao(id);
 
         return new TalhaoComPlanosVO(talhao, planos);
     }
@@ -144,7 +144,7 @@ public class TalhaoDAO {
      * 
      * @return um {@code ArrayList} contendo {@code TalhaoVO} como elementos
      */
-    public ArrayList<TalhaoVO> buscarTalhoesPorArea(int id) {
+    public ArrayList<TalhaoVO> buscarTalhoesDaArea(int id) {
         ArrayList<TalhaoVO> talhoes = new ArrayList<>();
 
         try {

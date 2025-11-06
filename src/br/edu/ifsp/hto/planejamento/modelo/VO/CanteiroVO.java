@@ -8,6 +8,27 @@ public class CanteiroVO {
     private String observacoes;
     private float kgGerados;
 
+    public CanteiroVO() {
+        
+    }
+
+    public CanteiroVO(int planoId, String nome, float areaCanteiroM2, String observacoes, float kgGerados) {
+        this.planoId = planoId;
+        this.nome = nome;
+        this.areaCanteiroM2 = areaCanteiroM2;
+        this.observacoes = observacoes;
+        this.kgGerados = kgGerados;
+    }
+
+    public CanteiroVO(int id, int planoId, String nome, float areaCanteiroM2, String observacoes, float kgGerados) {
+        this.id = id;
+        this.planoId = planoId;
+        this.nome = nome;
+        this.areaCanteiroM2 = areaCanteiroM2;
+        this.observacoes = observacoes;
+        this.kgGerados = kgGerados;
+    }
+
     public int getId() {
         return id;
     }

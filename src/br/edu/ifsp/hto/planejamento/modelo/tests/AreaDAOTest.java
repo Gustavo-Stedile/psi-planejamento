@@ -15,7 +15,7 @@ public class AreaDAOTest {
         List<AreaVO> areas = areaDAO.listarTodas();
         areas.forEach(area -> System.out.println(area.getNome()));
 
-        AreaComTalhoesVO at = areaDAO.listarAreaComTalhoes(1);
+        AreaComTalhoesVO at = areaDAO.buscarAreaComTalhoes(1);
         System.out.println(at.getTalhoes().get(0).getNome());
 
         AreaVO mudar = areas.get(0);

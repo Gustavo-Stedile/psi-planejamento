@@ -1,10 +1,13 @@
 package br.edu.ifsp.hto.planejamento.modelo.DAO;
 
 import java.sql.*;
+import java.sql.Date;
 import java.util.*;
 
 import br.edu.ifsp.hto.planejamento.modelo.ConexaoDoProjeto;
+import br.edu.ifsp.hto.planejamento.modelo.VO.AtividadeNoCanteiroVO;
 import br.edu.ifsp.hto.planejamento.modelo.VO.AtividadeVO;
+import br.edu.ifsp.hto.planejamento.modelo.VO.CanteiroVO;
 
 public class AtividadeDAO {
 
@@ -112,6 +115,40 @@ public class AtividadeDAO {
         }
 
         return atividade; // retorna o objeto ou null se não encontrou
+    }
+
+    public ArrayList<AtividadeNoCanteiroVO> buscarAtividadesDoCanteiro(int canteiroId) {
+         ArrayList<AtividadeNoCanteiroVO> atividadesNoCanteiro = new ArrayList<>();
+
+        try {
+            Connection conn = ConexaoDoProjeto.connect();
+            String sql = "SELECT * FROM atividade_canteiro WHERE canteiro_id = ?";
+
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, canteiroId);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                AtividadeVO atividade = buscarPorId(rs.getInt("atividade_id"));
+                float tempoGastoHoras = rs.getFloat("tempo_gasto_horas");
+                Date dataAtividade = rs.getDate("data_atividade");
+
+                atividadesNoCanteiro.add(new AtividadeNoCanteiroVO(
+                    atividade,
+                    tempoGastoHoras,
+                    dataAtividade
+                ));
+            }
+
+            stmt.close();
+            conn.close();
+            rs.close();
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return atividadesNoCanteiro;
     }
 
     private AtividadeVO resultSetToAtividade(ResultSet rs) throws SQLException {

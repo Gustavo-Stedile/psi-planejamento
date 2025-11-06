@@ -154,10 +154,10 @@ public class AreaDAO {
      * 
      * @return Um objeto do tipo {@code AreaTalhaoVO}
      */
-    public AreaComTalhoesVO listarAreaComTalhoes(int id) {
+    public AreaComTalhoesVO buscarAreaComTalhoes(int id) {
         AreaVO area = buscarPorId(id);
         TalhaoDAO talhaoDAO = new TalhaoDAO();
-        ArrayList<TalhaoVO> talhoes = talhaoDAO.buscarTalhoesPorArea(area.getId());
+        ArrayList<TalhaoVO> talhoes = talhaoDAO.buscarTalhoesDaArea(area.getId());
 
         return new AreaComTalhoesVO(area, talhoes);
     }

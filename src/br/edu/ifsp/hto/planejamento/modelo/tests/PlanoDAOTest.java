@@ -22,7 +22,7 @@ public class PlanoDAOTest {
         );
         // planoDAO.inserir(novo);
 
-        PlanoComCanteirosVO pc = planoDAO.listarPlanoComCanteiros(1);
+        PlanoComCanteirosVO pc = planoDAO.buscarPlanoComCanteiros(1);
         pc.getCanteiros().forEach(canteiro -> System.out.println(canteiro.getNome()));
 
         // planoDAO.deletar(1);
