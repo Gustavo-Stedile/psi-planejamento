@@ -3,6 +3,7 @@ package br.edu.ifsp.hto.planejamento.modelo.DAO;
 import java.sql.*;
 import java.util.*;
 
+import br.edu.ifsp.hto.planejamento.modelo.ConexaoDoProjeto;
 import br.edu.ifsp.hto.planejamento.modelo.VO.PlanoVO;
 import br.edu.ifsp.hto.planejamento.modelo.VO.TalhaoComPlanosVO;
 import br.edu.ifsp.hto.planejamento.modelo.VO.TalhaoVO;
@@ -16,16 +17,15 @@ public class TalhaoDAO {
      */
     public void inserir(TalhaoVO talhao) {
         try {
-            Connection conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/PlanejamentoProducao",
-                    "postegres", " ");
+            Connection conn = ConexaoDoProjeto.connect();
 
-            String sql = "INSERT INTO talhao (area_id, nome, area_talhao, observacoes, status_2) VALUES (?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO talhao (area_id, nome, area_talhao, observacoes, status) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, talhao.getAreaId());
             stmt.setString(2, talhao.getNome());
             stmt.setFloat(3, talhao.getAreaTalhao());
             stmt.setString(4, talhao.getObservacoes());
-            stmt.setString(5, talhao.getStatus2());
+            stmt.setString(5, talhao.getStatus());
             stmt.executeUpdate();
 
             stmt.close();
@@ -44,8 +44,7 @@ public class TalhaoDAO {
         List<TalhaoVO> talhoes = new ArrayList<>();
 
         try {
-            Connection conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/PlanejamentoProducao",
-                    "postegres", " ");
+            Connection conn = ConexaoDoProjeto.connect();
 
             String sql = "SELECT * FROM talhao";
             PreparedStatement stmt = conn.prepareStatement(sql);
@@ -72,16 +71,15 @@ public class TalhaoDAO {
      */
     public void atualizar(TalhaoVO talhao) {
         try {
-            Connection conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/PlanejamentoProducao",
-                    "postegres", " ");
+            Connection conn = ConexaoDoProjeto.connect();
 
-            String sql = "UPDATE talhao SET area_id = ?, nome = ?, area_talhao = ?, observacoes = ?, status_2 = ? WHERE id = ?";
+            String sql = "UPDATE talhao SET area_id = ?, nome = ?, area_talhao = ?, observacoes = ?, status = ? WHERE id = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, talhao.getAreaId());
             stmt.setString(2, talhao.getNome());
             stmt.setFloat(3, talhao.getAreaTalhao());
             stmt.setString(4, talhao.getObservacoes());
-            stmt.setString(5, talhao.getStatus2());
+            stmt.setString(5, talhao.getStatus());
             stmt.setInt(6, talhao.getId());
             stmt.executeUpdate();
 
@@ -103,8 +101,7 @@ public class TalhaoDAO {
         TalhaoVO talhao = null;
 
         try {
-            Connection conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/PlanejamentoProducao",
-                    "postegres", " ");
+            Connection conn = ConexaoDoProjeto.connect();
 
             String sql = "SELECT * FROM talhao WHERE id = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
@@ -151,8 +148,7 @@ public class TalhaoDAO {
         ArrayList<TalhaoVO> talhoes = new ArrayList<>();
 
         try {
-            Connection conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/PlanejamentoProducao",
-                    "postegres", " ");
+            Connection conn = ConexaoDoProjeto.connect();
 
             String sql = "SELECT * FROM canteiro WHERE area_id = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
@@ -180,8 +176,7 @@ public class TalhaoDAO {
      */
     public void deletar(int id) {
         try {
-            Connection conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/PlanejamentoProducao",
-                    "postegres", " ");
+            Connection conn = ConexaoDoProjeto.connect();
 
             String sql = "DELETE FROM talhao WHERE id = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
@@ -213,7 +208,7 @@ public class TalhaoDAO {
         talhao.setNome(rs.getString("nome"));
         talhao.setAreaTalhao(rs.getFloat("area_talhao"));
         talhao.setObservacoes(rs.getString("observacoes"));
-        talhao.setStatus2(rs.getString("status_2"));
+        talhao.setStatus(rs.getString("status"));
 
         return talhao;
     }

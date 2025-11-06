@@ -6,7 +6,7 @@ public class TalhaoVO {
     private String nome;
     private float areaTalhao;
     private String observacoes;
-    private String status2;
+    private String status;
 
     public int getId() {
         return id;
@@ -48,11 +48,11 @@ public class TalhaoVO {
         this.observacoes = observacoes;
     }
 
-    public String getStatus2() {
-        return status2;
+    public String getStatus() {
+        return status;
     }
 
-    public void setStatus2(String status2) {
-        this.status2 = status2;
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

@@ -5,7 +5,6 @@ import java.sql.Date;
 public class PlanoVO {
     private int id;
     private int especieId;
-    private int talhaoAreaId;
     private int talhaoId;
     private String nomePlano;
     private String descricao;
@@ -28,14 +27,6 @@ public class PlanoVO {
 
     public void setEspecieId(int especieId) {
         this.especieId = especieId;
-    }
-
-    public int getTalhaoAreaId() {
-        return talhaoAreaId;
-    }
-
-    public void setTalhaoAreaId(int talhaoAreaId) {
-        this.talhaoAreaId = talhaoAreaId;
     }
 
     public int getTalhaoId() {

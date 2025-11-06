@@ -7,7 +7,6 @@ public class AreaVO {
     public float areaTotal;
     public float areaUtilizada;
     public float ph;
-    public float areaM2;
 
     public int getId() {
         return id;
@@ -55,13 +54,5 @@ public class AreaVO {
 
     public void setPh(float ph) {
         this.ph = ph;
-    }
-
-    public float getAreaM2() {
-        return areaM2;
-    }
-
-    public void setAreaM2(float areaM2) {
-        this.areaM2 = areaM2;
     }
 }

@@ -3,6 +3,7 @@ package br.edu.ifsp.hto.planejamento.modelo.DAO;
 import java.sql.*;
 import java.util.*;
 
+import br.edu.ifsp.hto.planejamento.modelo.ConexaoDoProjeto;
 import br.edu.ifsp.hto.planejamento.modelo.VO.AreaComTalhoesVO;
 import br.edu.ifsp.hto.planejamento.modelo.VO.AreaVO;
 import br.edu.ifsp.hto.planejamento.modelo.VO.TalhaoVO;
@@ -16,8 +17,7 @@ public class AreaDAO {
      */
     public void inserir(AreaVO area) {
         try {
-            Connection conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/PlanejamentoProducao",
-                    "postegres", " ");
+            Connection conn = ConexaoDoProjeto.connect();
 
             String sql = "INSERT INTO area (associado_id, nome, area_total, area_utilizada, ph, area_m2) VALUES (?, ?, ?, ?, ?, ?)";
             PreparedStatement stmt = conn.prepareStatement(sql);
@@ -26,7 +26,6 @@ public class AreaDAO {
             stmt.setFloat(3, area.getAreaTotal());
             stmt.setFloat(4, area.getAreaUtilizada());
             stmt.setFloat(5, area.getPh());
-            stmt.setFloat(6, area.getAreaM2());
             stmt.executeUpdate();
 
             stmt.close();
@@ -45,9 +44,7 @@ public class AreaDAO {
         List<AreaVO> lista = new ArrayList<>();
 
         try {
-            Connection conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/PlanejamentoProducao",
-                    "postegres", " ");
-
+            Connection conn = ConexaoDoProjeto.connect();
             String sql = "SELECT * FROM area";
             PreparedStatement stmt = conn.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
@@ -74,18 +71,16 @@ public class AreaDAO {
     public void atualizar(AreaVO area) {
 
         try {
-            Connection conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/PlanejamentoProducao",
-                    "postegres", " ");
+            Connection conn = ConexaoDoProjeto.connect();
 
-            String sql = "UPDATE area SET associado_id = ?, nome = ?, area_total = ?, area_utilizada = ?, ph = ?, area_m2 = ? WHERE id = ?";
+            String sql = "UPDATE area SET associado_id = ?, nome = ?, area_total = ?, area_utilizada = ?, ph = ? WHERE id = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, area.getAssociadoId());
             stmt.setString(2, area.getNome());
             stmt.setFloat(3, area.getAreaTotal());
             stmt.setFloat(4, area.getAreaUtilizada());
             stmt.setFloat(5, area.getPh());
-            stmt.setFloat(6, area.getAreaM2());
-            stmt.setInt(7, area.getId());
+            stmt.setInt(6, area.getId());
             stmt.executeUpdate();
 
             stmt.close();
@@ -103,9 +98,7 @@ public class AreaDAO {
     public void deletar(int id) {
 
         try {
-            Connection conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/PlanejamentoProducao",
-                    "postegres", " ");
-
+            Connection conn = ConexaoDoProjeto.connect();
             String sql = "DELETE FROM area WHERE id = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, id);
@@ -129,8 +122,7 @@ public class AreaDAO {
         AreaVO area = null;
 
         try {
-            Connection conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/PlanejamentoProducao",
-                    "postegres", " ");
+            Connection conn = ConexaoDoProjeto.connect();
 
             String sql = "SELECT * FROM area WHERE id = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
@@ -190,7 +182,6 @@ public class AreaDAO {
         area.setAreaTotal(rs.getFloat("area_total"));
         area.setAreaUtilizada(rs.getFloat("area_utilizada"));
         area.setPh(rs.getFloat("ph"));
-        area.setAreaM2(rs.getFloat("area_m2"));
 
         return area;
     }

@@ -2,7 +2,6 @@ package br.edu.ifsp.hto.planejamento.modelo.VO;
 
 public class CanteiroVO {
     private int id;
-    private int planoEspecieId;
     private int planoId;
     private String nome;
     private float areaCanteiroM2;
@@ -15,14 +14,6 @@ public class CanteiroVO {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public int getPlanoEspecieId() {
-        return planoEspecieId;
-    }
-
-    public void setPlanoEspecieId(int planoEspecieId) {
-        this.planoEspecieId = planoEspecieId;
     }
 
     public int getPlanoId() {

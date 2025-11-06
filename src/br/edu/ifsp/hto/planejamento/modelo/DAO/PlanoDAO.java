@@ -3,6 +3,7 @@ package br.edu.ifsp.hto.planejamento.modelo.DAO;
 import java.sql.*;
 import java.util.*;
 
+import br.edu.ifsp.hto.planejamento.modelo.ConexaoDoProjeto;
 import br.edu.ifsp.hto.planejamento.modelo.VO.CanteiroVO;
 import br.edu.ifsp.hto.planejamento.modelo.VO.PlanoComCanteirosVO;
 import br.edu.ifsp.hto.planejamento.modelo.VO.PlanoVO;
@@ -16,20 +17,18 @@ public class PlanoDAO {
      */
     public void inserir(PlanoVO plano) {
         try {
-            Connection conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/PlanejamentoProducao",
-                    "postegres", " ");
+            Connection conn = ConexaoDoProjeto.connect();
 
-            String sql = "INSERT INTO plano (especie_id, talhao_area_id, talhao_id, nome_plano, descricao, data_inicio, data_fim, observacoes, area_cultivo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO plano (especie_id, talhao_id, nome_plano, descricao, data_inicio, data_fim, observacoes, area_cultivo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, plano.getEspecieId());
-            stmt.setInt(2, plano.getTalhaoAreaId());
-            stmt.setInt(3, plano.getTalhaoId());
-            stmt.setString(4, plano.getNomePlano());
-            stmt.setString(5, plano.getDescricao());
-            stmt.setDate(6, plano.getDataInicio());
-            stmt.setDate(7, plano.getDataFim());
-            stmt.setString(8, plano.getObservacoes());
-            stmt.setFloat(9, plano.getAreaCultivo());
+            stmt.setInt(2, plano.getTalhaoId());
+            stmt.setString(3, plano.getNomePlano());
+            stmt.setString(4, plano.getDescricao());
+            stmt.setDate(5, plano.getDataInicio());
+            stmt.setDate(6, plano.getDataFim());
+            stmt.setString(7, plano.getObservacoes());
+            stmt.setFloat(8, plano.getAreaCultivo());
             stmt.executeUpdate();
 
             stmt.close();
@@ -50,8 +49,7 @@ public class PlanoDAO {
         ArrayList<PlanoVO> planos = new ArrayList<>();
 
         try {
-            Connection conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/PlanejamentoProducao",
-                    "postegres", " ");
+            Connection conn = ConexaoDoProjeto.connect();
 
             String sql = "SELECT * FROM plano WHERE talhao_id = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
@@ -81,8 +79,7 @@ public class PlanoDAO {
         List<PlanoVO> lista = new ArrayList<>();
 
         try {
-            Connection conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/PlanejamentoProducao",
-                    "postegres", " ");
+            Connection conn = ConexaoDoProjeto.connect();
 
             String sql = "SELECT * FROM plano";
             PreparedStatement stmt = conn.prepareStatement(sql);
@@ -109,21 +106,19 @@ public class PlanoDAO {
      */
     public void atualizar(PlanoVO plano) {
         try {
-            Connection conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/PlanejamentoProducao",
-                    "postegres", " ");
+            Connection conn = ConexaoDoProjeto.connect();
 
-            String sql = "UPDATE Plano SET especie_id = ?, talhao_area_id = ?, talhao_id = ?, nome_plano = ?, descricao = ?, data_inicio = ?, data_fim = ?, observacoes = ?, area_cultivo = ? WHERE id = ?";
+            String sql = "UPDATE Plano SET especie_id = ?, talhao_id = ?, nome_plano = ?, descricao = ?, data_inicio = ?, data_fim = ?, observacoes = ?, area_cultivo = ? WHERE id = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, plano.getEspecieId());
-            stmt.setInt(2, plano.getTalhaoAreaId());
-            stmt.setInt(3, plano.getTalhaoId());
-            stmt.setString(4, plano.getNomePlano());
-            stmt.setString(5, plano.getDescricao());
-            stmt.setDate(6, plano.getDataInicio());
-            stmt.setDate(7, plano.getDataFim());
-            stmt.setString(8, plano.getObservacoes());
-            stmt.setFloat(9, plano.getAreaCultivo());
-            stmt.setInt(10, plano.getId());
+            stmt.setInt(2, plano.getTalhaoId());
+            stmt.setString(3, plano.getNomePlano());
+            stmt.setString(4, plano.getDescricao());
+            stmt.setDate(5, plano.getDataInicio());
+            stmt.setDate(6, plano.getDataFim());
+            stmt.setString(7, plano.getObservacoes());
+            stmt.setFloat(8, plano.getAreaCultivo());
+            stmt.setInt(9, plano.getId());
 
             stmt.executeUpdate();
             stmt.close();
@@ -140,8 +135,7 @@ public class PlanoDAO {
      */
     public void deletar(int id) {
         try {
-            Connection conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/PlanejamentoProducao",
-                    "postegres", " ");
+            Connection conn = ConexaoDoProjeto.connect();
 
             String sql = "DELETE FROM plano WHERE id = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
@@ -166,8 +160,7 @@ public class PlanoDAO {
         PlanoVO plano = null;
 
         try {
-            Connection conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/PlanejamentoProducao",
-                    "postegres", " ");
+            Connection conn = ConexaoDoProjeto.connect();
 
             String sql = "SELECT * FROM plano WHERE id = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
@@ -175,17 +168,7 @@ public class PlanoDAO {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                plano = new PlanoVO();
-                plano.setId(rs.getInt("id"));
-                plano.setTalhaoId(rs.getInt("especie_id"));
-                plano.setTalhaoId(rs.getInt("talhao_area_id"));
-                plano.setTalhaoId(rs.getInt("talhao_id"));
-                plano.setNomePlano(rs.getString("nome_plano"));
-                plano.setDescricao(rs.getString("descricao"));
-                plano.setDataInicio(rs.getDate("data_inicio"));
-                plano.setDataFim(rs.getDate("data_fim"));
-                plano.setObservacoes(rs.getString("observacoes"));
-                plano.setAreaCultivo(rs.getFloat("area_cultivo"));
+                plano = resultSetToPlano(rs);
             }
 
             rs.close();
@@ -228,7 +211,6 @@ public class PlanoDAO {
 
         plano.setId(rs.getInt("id"));
         plano.setEspecieId(rs.getInt("especie_id"));
-        plano.setTalhaoAreaId(rs.getInt("talhao_area_id"));
         plano.setTalhaoId(rs.getInt("talhao_id"));
         plano.setNomePlano(rs.getString("nome_plano"));
         plano.setDescricao(rs.getString("descricao"));

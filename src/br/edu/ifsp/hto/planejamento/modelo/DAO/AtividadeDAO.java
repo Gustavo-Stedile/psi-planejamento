@@ -3,36 +3,37 @@ package br.edu.ifsp.hto.planejamento.modelo.DAO;
 import java.sql.*;
 import java.util.*;
 
+import br.edu.ifsp.hto.planejamento.modelo.ConexaoDoProjeto;
 import br.edu.ifsp.hto.planejamento.modelo.VO.AtividadeVO;
 
 public class AtividadeDAO {
 
     // Inserir novo atividade
-    public void inserir(AtividadeVO atividade){
+    public void inserir(AtividadeVO atividade) {
 
-        try{
-            Connection conexao = DriverManager.getConnection("jdbc:postgresql://localhost:5432/PlanejamentoProducao", "postegres", " ");
+        try {
+            Connection conexao = ConexaoDoProjeto.connect();
 
-            String sql = "INSERT INTO atividade (nome_atividade, descricao, observacoes, status_2) VALUES (?, ?, ?, ?)";
+            String sql = "INSERT INTO atividade (nome_atividade, descricao, observacoes, status) VALUES (?, ?, ?, ?)";
             PreparedStatement stmt = conexao.prepareStatement(sql);
             stmt.setString(1, atividade.getNomeAtividade());
             stmt.setString(2, atividade.getDescricao());
             stmt.setString(3, atividade.getObervacoes());
-            stmt.setString(4, atividade.getStatus2());
+            stmt.setString(4, atividade.getStatus());
 
             stmt.executeUpdate();
             stmt.close();
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     // Listar todos os materiais
-    public List<AtividadeVO> listarTodos(){
+    public List<AtividadeVO> listarTodos() {
         List<AtividadeVO> lista = new ArrayList<>();
 
         try {
-            Connection conexao = DriverManager.getConnection("jdbc:postgresql://localhost:5432/PlanejamentoProducao", "postegres", " ");
+            Connection conexao = ConexaoDoProjeto.connect();
 
             String sql = "SELECT * FROM atividade";
             PreparedStatement stmt = conexao.prepareStatement(sql);
@@ -44,7 +45,7 @@ public class AtividadeDAO {
                 a.setNomeAtividade(rs.getString("nome_atividade"));
                 a.setDescricao(rs.getString("descricao"));
                 a.setObervacoes(rs.getString("observacoes"));
-                a.setStatus2(rs.getString("status_2"));
+                a.setStatus(rs.getString("status"));
                 lista.add(a);
             }
 
@@ -53,58 +54,57 @@ public class AtividadeDAO {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
         return lista;
     }
 
     // Atualizar atividade existente
-    public void atualizar(AtividadeVO atividade){
-        try{
-            Connection conexao = DriverManager.getConnection("jdbc:postgresql://localhost:5432/PlanejamentoProducao", "postegres", " ");
+    public void atualizar(AtividadeVO atividade) {
+        try {
+            Connection conexao = ConexaoDoProjeto.connect();
 
-            String sql = "UPDATE atividade SET nome_atividade = ?, descricao = ?, observacoes = ?, status_2 = ? WHERE id = ?";
+            String sql = "UPDATE atividade SET nome_atividade = ?, descricao = ?, observacoes = ?, status = ? WHERE id = ?";
             PreparedStatement stmt = conexao.prepareStatement(sql);
             stmt.setString(1, atividade.getNomeAtividade());
             stmt.setString(2, atividade.getDescricao());
             stmt.setString(3, atividade.getObervacoes());
-            stmt.setString(4, atividade.getStatus2());
+            stmt.setString(4, atividade.getStatus());
             stmt.setInt(5, atividade.getId());
 
             stmt.executeUpdate();
             stmt.close();
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
-        }    
+        }
     }
 
     // Deletar atividade
-    public void deletar(int id){
-        try{
-            Connection conexao = DriverManager.getConnection("jdbc:postgresql://localhost:5432/PlanejamentoProducao", "postegres", " ");
-        
+    public void deletar(int id) {
+        try {
+            Connection conexao = ConexaoDoProjeto.connect();
+
             String sql = "DELETE FROM atividade WHERE id = ?";
             PreparedStatement stmt = conexao.prepareStatement(sql);
             stmt.setInt(1, id);
 
             stmt.executeUpdate();
             stmt.close();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     // Buscar atividade por ID
-    public AtividadeVO buscarPorId(int id){
+    public AtividadeVO buscarPorId(int id) {
         AtividadeVO atividade = null;
 
-        try{
-            Connection conexao = DriverManager.getConnection("jdbc:postgresql://localhost:5432/PlanejamentoProducao", "postegres", " ");
-        
+        try {
+            Connection conexao = ConexaoDoProjeto.connect();
+
             String sql = "SELECT * FROM atividade WHERE id = ?";
             PreparedStatement stmt = conexao.prepareStatement(sql);
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
-
 
             if (rs.next()) { // se encontrou algum registro
                 atividade = new AtividadeVO();
@@ -112,13 +112,13 @@ public class AtividadeDAO {
                 atividade.setNomeAtividade(rs.getString("nome_atividade"));
                 atividade.setDescricao(rs.getString("descricao"));
                 atividade.setObervacoes(rs.getString("observacoes"));
-                atividade.setStatus2(rs.getString("status_2"));
+                atividade.setStatus(rs.getString("status"));
             }
 
             rs.close();
             stmt.close();
 
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

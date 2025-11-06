@@ -5,7 +5,7 @@ public class AtividadeVO {
     private String nomeAtividade;
     private String descricao;
     private String obervacoes;
-    private String status2;
+    private String status;
 
     public int getId() {
         return id;
@@ -39,11 +39,11 @@ public class AtividadeVO {
         this.obervacoes = obervacoes;
     }
 
-    public String getStatus2() {
-        return status2;
+    public String getStatus() {
+        return status;
     }
 
-    public void setStatus2(String status2) {
-        this.status2 = status2;
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
