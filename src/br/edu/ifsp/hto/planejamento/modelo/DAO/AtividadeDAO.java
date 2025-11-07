@@ -5,9 +5,10 @@ import java.sql.Date;
 import java.util.*;
 
 import br.edu.ifsp.hto.planejamento.modelo.ConexaoDoProjeto;
+import br.edu.ifsp.hto.planejamento.modelo.VO.AtividadeComMateriaisVO;
 import br.edu.ifsp.hto.planejamento.modelo.VO.AtividadeNoCanteiroVO;
 import br.edu.ifsp.hto.planejamento.modelo.VO.AtividadeVO;
-import br.edu.ifsp.hto.planejamento.modelo.VO.CanteiroVO;
+import br.edu.ifsp.hto.planejamento.modelo.VO.MaterialNaAtividadeVO;
 
 public class AtividadeDAO {
 
@@ -48,6 +49,7 @@ public class AtividadeDAO {
 
             rs.close();
             stmt.close();
+            conexao.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -70,6 +72,7 @@ public class AtividadeDAO {
 
             stmt.executeUpdate();
             stmt.close();
+            conexao.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -86,6 +89,7 @@ public class AtividadeDAO {
 
             stmt.executeUpdate();
             stmt.close();
+            conexao.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -109,7 +113,7 @@ public class AtividadeDAO {
 
             rs.close();
             stmt.close();
-
+            conexao.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -117,14 +121,23 @@ public class AtividadeDAO {
         return atividade; // retorna o objeto ou null se não encontrou
     }
 
+    public AtividadeComMateriaisVO buscarAtividadeComMateriais(int atividadeId){
+        AtividadeVO atividade = buscarPorId(atividadeId);
+        
+        MaterialDAO materialDAO = new MaterialDAO();
+        ArrayList<MaterialNaAtividadeVO> materiais = materialDAO.buscarMateriaisDaAtividade(atividadeId);
+
+        return new AtividadeComMateriaisVO(atividade, materiais);
+    }
+
     public ArrayList<AtividadeNoCanteiroVO> buscarAtividadesDoCanteiro(int canteiroId) {
          ArrayList<AtividadeNoCanteiroVO> atividadesNoCanteiro = new ArrayList<>();
 
         try {
-            Connection conn = ConexaoDoProjeto.connect();
+            Connection conexao = ConexaoDoProjeto.connect();
             String sql = "SELECT * FROM atividade_canteiro WHERE canteiro_id = ?";
 
-            PreparedStatement stmt = conn.prepareStatement(sql);
+            PreparedStatement stmt = conexao.prepareStatement(sql);
             stmt.setInt(1, canteiroId);
             ResultSet rs = stmt.executeQuery();
 
@@ -141,9 +154,8 @@ public class AtividadeDAO {
             }
 
             stmt.close();
-            conn.close();
             rs.close();
-            conn.close();
+            conexao.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -153,11 +165,13 @@ public class AtividadeDAO {
 
     private AtividadeVO resultSetToAtividade(ResultSet rs) throws SQLException {
         AtividadeVO atividade = new AtividadeVO();
+
         atividade.setId(rs.getInt("id"));
         atividade.setNomeAtividade(rs.getString("nome_atividade"));
         atividade.setDescricao(rs.getString("descricao"));
         atividade.setObervacoes(rs.getString("observacoes"));
         atividade.setStatus(rs.getString("status"));
+
         return atividade;
     }
 }
