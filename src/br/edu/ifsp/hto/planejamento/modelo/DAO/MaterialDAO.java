@@ -4,6 +4,7 @@ import java.sql.*;
 import java.util.*;
 
 import br.edu.ifsp.hto.planejamento.modelo.ConexaoDoProjeto;
+import br.edu.ifsp.hto.planejamento.modelo.VO.MaterialNaAtividadeVO;
 import br.edu.ifsp.hto.planejamento.modelo.VO.MaterialVO;
 
 public class MaterialDAO {
@@ -22,6 +23,7 @@ public class MaterialDAO {
 
             stmt.executeUpdate();
             stmt.close();
+            conexao.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -44,6 +46,7 @@ public class MaterialDAO {
 
             rs.close();
             stmt.close();
+            conexao.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -66,6 +69,7 @@ public class MaterialDAO {
 
             stmt.executeUpdate();
             stmt.close();
+            conexao.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -82,9 +86,36 @@ public class MaterialDAO {
 
             stmt.executeUpdate();
             stmt.close();
+            conexao.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public ArrayList<MaterialNaAtividadeVO> buscarMateriaisDaAtividade(int atividadeId){
+        ArrayList<MaterialNaAtividadeVO> materiais = new ArrayList<>();
+        
+        try {
+            Connection conexao = ConexaoDoProjeto.connect();
+            String sql = "SELECT * FROM material_atividade WHERE atividade_id = ?";
+            PreparedStatement stmt = conexao.prepareStatement(sql);
+            stmt.setInt(1, atividadeId);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                MaterialVO material = buscarPorId(rs.getInt("material_id"));
+                float quantidadeUtilizada = rs.getFloat("quantidade_utilizada");
+                materiais.add(new MaterialNaAtividadeVO(material, quantidadeUtilizada));
+            }
+
+            stmt.close();
+            rs.close();
+            conexao.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return materiais;
     }
 
     // Buscar Material por ID
@@ -104,6 +135,7 @@ public class MaterialDAO {
 
             rs.close();
             stmt.close();
+            conexao.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
