@@ -7,6 +7,25 @@ public class MaterialVO {
     private float quantidade;
     private String unidadeMedida;
 
+    public MaterialVO() {
+
+    }
+
+    public MaterialVO(int associadoId, String nome, float quantidade, String unidadeMedida) {
+        this.associadoId = associadoId;
+        this.nome = nome;
+        this.quantidade = quantidade;
+        this.unidadeMedida = unidadeMedida;
+    }
+
+    public MaterialVO(int id, int associadoId, String nome, float quantidade, String unidadeMedida) {
+        this.id = id;
+        this.associadoId = associadoId;
+        this.nome = nome;
+        this.quantidade = quantidade;
+        this.unidadeMedida = unidadeMedida;
+    }
+
     public int getId() {
         return id;
     }
