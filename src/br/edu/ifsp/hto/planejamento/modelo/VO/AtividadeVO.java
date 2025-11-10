@@ -7,6 +7,25 @@ public class AtividadeVO {
     private String obervacoes;
     private String status;
 
+    public AtividadeVO() {
+        
+    }
+
+    public AtividadeVO(String nomeAtividade, String descricao, String obervacoes, String status) {
+        this.nomeAtividade = nomeAtividade;
+        this.descricao = descricao;
+        this.obervacoes = obervacoes;
+        this.status = status;
+    }
+
+    public AtividadeVO(int id, String nomeAtividade, String descricao, String obervacoes, String status) {
+        this.id = id;
+        this.nomeAtividade = nomeAtividade;
+        this.descricao = descricao;
+        this.obervacoes = obervacoes;
+        this.status = status;
+    }
+
     public int getId() {
         return id;
     }
