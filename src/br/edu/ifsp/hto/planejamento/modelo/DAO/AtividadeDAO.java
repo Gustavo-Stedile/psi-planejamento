@@ -33,7 +33,7 @@ public class AtividadeDAO {
     }
 
     // Listar todos os materiais
-    public List<AtividadeVO> listarTodos() {
+    public List<AtividadeVO> listarTodas() {
         List<AtividadeVO> lista = new ArrayList<>();
 
         try {

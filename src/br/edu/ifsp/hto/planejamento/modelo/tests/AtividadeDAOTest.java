@@ -10,7 +10,7 @@ public class AtividadeDAOTest {
 
         //atividadeDAO.inserir(new AtividadeVO(1, "Teste", "teste", "TESTE", "NÂO"));
         
-        atividadeDAO.listarTodos().forEach(atividade -> System.out.println(atividade.getNomeAtividade()));
+        atividadeDAO.listarTodas().forEach(atividade -> System.out.println(atividade.getNomeAtividade()));
 
         atividadeDAO.buscarAtividadesDoCanteiro(1).forEach(atividadesDoCanteiro -> System.out.println(atividadesDoCanteiro.getDataAtividade()));
     

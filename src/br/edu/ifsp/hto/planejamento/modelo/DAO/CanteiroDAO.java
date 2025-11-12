@@ -4,13 +4,9 @@ import java.sql.*;
 import java.util.*;
 
 import br.edu.ifsp.hto.planejamento.modelo.ConexaoDoProjeto;
-import br.edu.ifsp.hto.planejamento.modelo.VO.AtividadeNoCanteiro;
 import br.edu.ifsp.hto.planejamento.modelo.VO.AtividadeNoCanteiroVO;
-import br.edu.ifsp.hto.planejamento.modelo.VO.AtividadeVO;
 import br.edu.ifsp.hto.planejamento.modelo.VO.CanteiroComAtividadesVO;
 import br.edu.ifsp.hto.planejamento.modelo.VO.CanteiroVO;
-import br.edu.ifsp.hto.planejamento.modelo.VO.PlanoComCanteirosVO;
-import br.edu.ifsp.hto.planejamento.modelo.VO.TalhaoVO;
 
 public class CanteiroDAO {
 
