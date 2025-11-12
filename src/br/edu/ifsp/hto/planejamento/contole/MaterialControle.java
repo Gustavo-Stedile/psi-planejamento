@@ -6,9 +6,19 @@ import java.util.*;
 import br.edu.ifsp.hto.planejamento.modelo.ConexaoDoProjeto;
 import br.edu.ifsp.hto.planejamento.modelo.VO.MaterialVO;
 
+/**
+ * Classe responsável por controlar as operações de CRUD na tabela 'material'.
+ * Realiza a comunicação entre a camada de modelo (MaterialVO) e o banco de dados.
+ * 
+ * @author Nicolas Jesus Silva
+ */
 public class MaterialControle {
 
-    //  Inserir novo material
+    /**
+     * Insere um novo material no banco de dados.
+     * 
+     * @param material Objeto MaterialVO contendo os dados do material a ser inserido.
+     */
     public void inserir(MaterialVO material) {
         try {
             Connection conexao = ConexaoDoProjeto.connect();
@@ -28,7 +38,11 @@ public class MaterialControle {
         }
     }
 
-    //  Listar todos os materiais
+    /**
+     * Lista todos os materiais cadastrados no banco de dados.
+     * 
+     * @return Lista de objetos MaterialVO.
+     */
     public List<MaterialVO> listarTodos() {
         List<MaterialVO> lista = new ArrayList<>();
 
@@ -53,7 +67,11 @@ public class MaterialControle {
         return lista;
     }
 
-    //  Atualizar material existente
+    /**
+     * Atualiza os dados de um material existente.
+     * 
+     * @param material Objeto MaterialVO com os dados atualizados do material.
+     */
     public void atualizar(MaterialVO material) {
         try {
             Connection conexao = ConexaoDoProjeto.connect();
@@ -74,7 +92,11 @@ public class MaterialControle {
         }
     }
 
-    //  Deletar material
+    /**
+     * Deleta um material do banco de dados.
+     * 
+     * @param id ID do material que será removido.
+     */
     public void deletar(int id) {
         try {
             Connection conexao = ConexaoDoProjeto.connect();
@@ -91,7 +113,12 @@ public class MaterialControle {
         }
     }
 
-    //  Buscar Material por ID
+    /**
+     * Busca um material pelo seu ID.
+     * 
+     * @param id ID do material que será buscado.
+     * @return Objeto MaterialVO correspondente ao material encontrado, ou null se não encontrado.
+     */
     public MaterialVO buscarPorId(int id) {
         MaterialVO material = null;
 
@@ -117,7 +144,13 @@ public class MaterialControle {
         return material;
     }
 
-    //  Converter ResultSet para MaterialVO
+    /**
+     * Converte um ResultSet em um objeto MaterialVO.
+     * 
+     * @param rs ResultSet retornado de uma consulta SQL.
+     * @return Objeto MaterialVO preenchido com os dados do ResultSet.
+     * @throws SQLException Caso ocorra erro ao acessar os dados do ResultSet.
+     */
     private MaterialVO resultSetToMaterial(ResultSet rs) throws SQLException {
         MaterialVO material = new MaterialVO();
         material.setId(rs.getInt("id"));

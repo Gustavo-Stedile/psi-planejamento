@@ -9,9 +9,20 @@ import br.edu.ifsp.hto.planejamento.modelo.VO.AtividadeNoCanteiroVO;
 import br.edu.ifsp.hto.planejamento.modelo.VO.AtividadeVO;
 import br.edu.ifsp.hto.planejamento.modelo.VO.CanteiroVO;
 
+/**
+ * Classe responsável pelo controle das operações relacionadas às atividades,
+ * incluindo inserção, listagem, atualização, exclusão e busca de atividades
+ * no banco de dados.
+ *
+ * @author Nicolas Jesus Silva
+ */
 public class AtividadeControle {
 
-    // Inserir nova atividade
+    /**
+     * Insere uma nova atividade no banco de dados.
+     *
+     * @param atividade objeto AtividadeVO contendo os dados da nova atividade
+     */
     public void inserir(AtividadeVO atividade) {
         try {
             Connection conexao = ConexaoDoProjeto.connect();
@@ -31,7 +42,11 @@ public class AtividadeControle {
         }
     }
 
-    // Listar todas as atividades
+    /**
+     * Lista todas as atividades cadastradas no banco de dados.
+     *
+     * @return lista de objetos AtividadeVO
+     */
     public List<AtividadeVO> listarTodos() {
         List<AtividadeVO> lista = new ArrayList<>();
 
@@ -56,7 +71,11 @@ public class AtividadeControle {
         return lista;
     }
 
-    // Atualizar atividade existente
+    /**
+     * Atualiza os dados de uma atividade existente.
+     *
+     * @param atividade objeto AtividadeVO contendo os dados atualizados
+     */
     public void atualizar(AtividadeVO atividade) {
         try {
             Connection conexao = ConexaoDoProjeto.connect();
@@ -77,7 +96,11 @@ public class AtividadeControle {
         }
     }
 
-    // Deletar atividade
+    /**
+     * Exclui uma atividade do banco de dados com base no seu ID.
+     *
+     * @param id identificador da atividade a ser excluída
+     */
     public void deletar(int id) {
         try {
             Connection conexao = ConexaoDoProjeto.connect();
@@ -94,7 +117,12 @@ public class AtividadeControle {
         }
     }
 
-    // Buscar atividade por ID
+    /**
+     * Busca uma atividade específica pelo seu ID.
+     *
+     * @param id identificador da atividade
+     * @return objeto AtividadeVO correspondente ao ID informado, ou null se não encontrado
+     */
     public AtividadeVO buscarPorId(int id) {
         AtividadeVO atividade = null;
 
@@ -121,7 +149,12 @@ public class AtividadeControle {
         return atividade;
     }
 
-    // Buscar atividades vinculadas a um canteiro específico
+    /**
+     * Busca todas as atividades associadas a um determinado canteiro.
+     *
+     * @param canteiroId identificador do canteiro
+     * @return lista de objetos AtividadeNoCanteiroVO vinculados ao canteiro
+     */
     public ArrayList<AtividadeNoCanteiroVO> buscarAtividadesDoCanteiro(int canteiroId) {
         ArrayList<AtividadeNoCanteiroVO> atividadesNoCanteiro = new ArrayList<>();
 
@@ -156,7 +189,13 @@ public class AtividadeControle {
         return atividadesNoCanteiro;
     }
 
-    // Conversão de ResultSet para objeto VO
+    /**
+     * Converte uma linha de resultado do banco de dados em um objeto AtividadeVO.
+     *
+     * @param rs ResultSet contendo os dados da atividade
+     * @return objeto AtividadeVO populado com os dados do ResultSet
+     * @throws SQLException caso ocorra erro ao acessar os dados
+     */
     private AtividadeVO resultSetToAtividade(ResultSet rs) throws SQLException {
         AtividadeVO atividade = new AtividadeVO();
         atividade.setId(rs.getInt("id"));

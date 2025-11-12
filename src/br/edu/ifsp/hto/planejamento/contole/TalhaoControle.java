@@ -7,14 +7,28 @@ import br.edu.ifsp.hto.planejamento.modelo.DAO.PlanoDAO;
 import br.edu.ifsp.hto.planejamento.modelo.VO.PlanoVO;
 import br.edu.ifsp.hto.planejamento.modelo.VO.PlanoComCanteirosVO;
 
+/**
+ * Classe de controle responsável por gerenciar as operações relacionadas a {@link PlanoVO}.
+ * Atua como intermediária entre a camada de visualização e o {@link PlanoDAO}.
+ * 
+ * @author Nicolas de Jesus Silva
+ */
 public class PlanoControle {
+
     private PlanoDAO planoDAO;
 
+    /**
+     * Construtor padrão que inicializa o DAO de plano.
+     */
     public PlanoControle() {
         this.planoDAO = new PlanoDAO();
     }
 
-    // Inserir novo plano
+    /**
+     * Insere um novo plano no banco de dados.
+     * 
+     * @param plano Objeto {@link PlanoVO} contendo os dados do plano a ser inserido.
+     */
     public void inserir(PlanoVO plano) {
         if (plano != null) {
             planoDAO.inserir(plano);
@@ -24,7 +38,11 @@ public class PlanoControle {
         }
     }
 
-    // Listar todos os planos
+    /**
+     * Lista todos os planos cadastrados no banco de dados.
+     * 
+     * @return Lista de objetos {@link PlanoVO}.
+     */
     public List<PlanoVO> listarTodos() {
         List<PlanoVO> planos = planoDAO.listarTodos();
         if (planos.isEmpty()) {
@@ -33,7 +51,12 @@ public class PlanoControle {
         return planos;
     }
 
-    // Buscar plano por ID
+    /**
+     * Busca um plano pelo seu identificador (ID).
+     * 
+     * @param id Identificador do plano a ser buscado.
+     * @return Objeto {@link PlanoVO} correspondente ao ID informado, ou {@code null} se não encontrado.
+     */
     public PlanoVO buscarPorId(int id) {
         PlanoVO plano = planoDAO.buscarPorId(id);
         if (plano == null) {
@@ -42,7 +65,12 @@ public class PlanoControle {
         return plano;
     }
 
-    // Buscar planos de um talhão
+    /**
+     * Busca todos os planos associados a um determinado talhão.
+     * 
+     * @param talhaoId Identificador do talhão.
+     * @return Lista de {@link PlanoVO} relacionados ao talhão informado.
+     */
     public ArrayList<PlanoVO> buscarPlanosDoTalhao(int talhaoId) {
         ArrayList<PlanoVO> planos = planoDAO.buscarPlanosDoTalhao(talhaoId);
         if (planos.isEmpty()) {
@@ -51,7 +79,11 @@ public class PlanoControle {
         return planos;
     }
 
-    // Atualizar plano existente
+    /**
+     * Atualiza os dados de um plano existente.
+     * 
+     * @param plano Objeto {@link PlanoVO} contendo os novos dados do plano.
+     */
     public void atualizar(PlanoVO plano) {
         if (plano != null && plano.getId() > 0) {
             planoDAO.atualizar(plano);
@@ -61,7 +93,11 @@ public class PlanoControle {
         }
     }
 
-    // Deletar plano
+    /**
+     * Deleta um plano do banco de dados com base em seu ID.
+     * 
+     * @param id Identificador do plano a ser deletado.
+     */
     public void deletar(int id) {
         PlanoVO plano = planoDAO.buscarPorId(id);
         if (plano != null) {
@@ -72,7 +108,12 @@ public class PlanoControle {
         }
     }
 
-    // Buscar plano com canteiros
+    /**
+     * Busca um plano juntamente com seus canteiros vinculados.
+     * 
+     * @param id Identificador do plano.
+     * @return Objeto {@link PlanoComCanteirosVO} contendo o plano e seus canteiros, ou {@code null} se não encontrado.
+     */
     public PlanoComCanteirosVO buscarPlanoComCanteiros(int id) {
         PlanoComCanteirosVO planoCanteiro = planoDAO.buscarPlanoComCanteiros(id);
         if (planoCanteiro == null || planoCanteiro.getPlano() == null) {
