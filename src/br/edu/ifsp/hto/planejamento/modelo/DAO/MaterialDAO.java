@@ -1,7 +1,11 @@
 package br.edu.ifsp.hto.planejamento.modelo.DAO;
 
-import java.sql.*;
-import java.util.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import br.edu.ifsp.hto.planejamento.modelo.ConexaoDoProjeto;
 import br.edu.ifsp.hto.planejamento.modelo.VO.MaterialNaAtividadeVO;
@@ -9,7 +13,11 @@ import br.edu.ifsp.hto.planejamento.modelo.VO.MaterialVO;
 
 public class MaterialDAO {
 
-    // Inserir novo material
+    /**
+     * Adiciona um novo material no banco de dados
+     * 
+     * @param material objeto do tipo {@code MaterialVO}
+     */
     public void inserir(MaterialVO material) {
         try {
             Connection conexao = ConexaoDoProjeto.connect();
@@ -29,7 +37,11 @@ public class MaterialDAO {
         }
     }
 
-    // Listar todos os materiais
+    /**
+     * Lista todos os materiais presentes no banco de dados
+     * 
+     * @return um {@code List} contendo {@code MaterialVO} como elementos
+     */
     public List<MaterialVO> listarTodos() {
         List<MaterialVO> lista = new ArrayList<>();
 
@@ -54,7 +66,11 @@ public class MaterialDAO {
         return lista;
     }
 
-    // Atualizar material existente
+    /**
+     * Atualiza um material presente no banco de dados
+     * 
+     * @param material objeto {@code MaterialVO} contendo os novos dados
+     */
     public void atualizar(MaterialVO material) {
         try {
             Connection conexao = ConexaoDoProjeto.connect();
@@ -75,7 +91,11 @@ public class MaterialDAO {
         }
     }
 
-    // Deletar material
+    /**
+     * Deleta um material presente no banco de dados
+     * 
+     * @param id identificador do material a ser excluido
+     */
     public void deletar(int id) {
         try {
             Connection conexao = ConexaoDoProjeto.connect();
@@ -92,8 +112,15 @@ public class MaterialDAO {
         }
     }
 
-    public ArrayList<MaterialNaAtividadeVO> buscarMateriaisDaAtividade(int atividadeId){
-        ArrayList<MaterialNaAtividadeVO> materiais = new ArrayList<>();
+    /**
+     * Busca todos os materiais pertencentes a uma atividade
+     * 
+     * @param id identificador do material
+     * 
+     * @return um {@code List} contendo {@code MaterialNaAtividadeVO} como elementos
+     */
+    public List<MaterialNaAtividadeVO> buscarMateriaisDaAtividade(int atividadeId){
+        List<MaterialNaAtividadeVO> materiais = new ArrayList<>();
         
         try {
             Connection conexao = ConexaoDoProjeto.connect();
@@ -118,18 +145,24 @@ public class MaterialDAO {
         return materiais;
     }
 
-    // Buscar Material por ID
+    /**
+     * Busca um material no banco de dados pelo id
+     * 
+     * @param id identificador do material
+     * 
+     * @return um objeto do tipo {@code MaterialVO}
+     */
     public MaterialVO buscarPorId(int id) {
         MaterialVO material = null;
         try {
             Connection conexao = ConexaoDoProjeto.connect();
 
-            String sql = "SELECT * FROM Material WHERE id = ?";
+            String sql = "SELECT * FROM material WHERE id = ?";
             PreparedStatement stmt = conexao.prepareStatement(sql);
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
 
-            if (rs.next()) { // se encontrou algum registro
+            if (rs.next()) {
                 material = resultSetToMaterial(rs);
             }
 
@@ -140,9 +173,19 @@ public class MaterialDAO {
             e.printStackTrace();
         }
 
-        return material; // retorna o objeto ou null se não encontrou
+        return material;
     }
-
+    
+    /**
+     * Retorna o material presente no banco de dados contendo todas
+     * as suas informações
+     * 
+     * @param rs {@code ResultSet} contendo os atributos de {@code MaterialVO}
+     * 
+     * @return um objeto do tipo {@code MaterialVO}
+     * 
+     * @throws SQLException caso ocorra algum erro no acesso ao banco
+     */
     private MaterialVO resultSetToMaterial(ResultSet rs) throws SQLException {
         MaterialVO material = new MaterialVO();
         material.setId(rs.getInt("id"));
