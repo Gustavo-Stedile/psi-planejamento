@@ -1,8 +1,12 @@
 package br.edu.ifsp.hto.planejamento.modelo.DAO;
 
-import java.sql.*;
+import java.sql.Connection;
 import java.sql.Date;
-import java.util.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import br.edu.ifsp.hto.planejamento.modelo.ConexaoDoProjeto;
 import br.edu.ifsp.hto.planejamento.modelo.VO.AtividadeComMateriaisVO;
@@ -12,7 +16,11 @@ import br.edu.ifsp.hto.planejamento.modelo.VO.MaterialNaAtividadeVO;
 
 public class AtividadeDAO {
 
-    // Inserir novo atividade
+    /**
+     * Adiciona uma nova atividade no banco de dados
+     * 
+     * @param atividade objeto do tipo {@code AtividadeVO}
+     */
     public void inserir(AtividadeVO atividade) {
 
         try {
@@ -32,7 +40,11 @@ public class AtividadeDAO {
         }
     }
 
-    // Listar todos os materiais
+    /**
+     * Lista todas as atividades presentes no banco de dados
+     * 
+     * @return um {@code List} contendo {@code AtividadeVO} como elementos
+     */
     public List<AtividadeVO> listarTodas() {
         List<AtividadeVO> lista = new ArrayList<>();
 
@@ -57,7 +69,11 @@ public class AtividadeDAO {
         return lista;
     }
 
-    // Atualizar atividade existente
+    /**
+     * Atualiza uma área presente no banco de dados
+     * 
+     * @param atividade objeto {@code AtividadeVO} contendo os novos dados
+     */
     public void atualizar(AtividadeVO atividade) {
         try {
             Connection conexao = ConexaoDoProjeto.connect();
@@ -78,7 +94,11 @@ public class AtividadeDAO {
         }
     }
 
-    // Deletar atividade
+    /**
+     * Deleta uma atividade presente no banco de dados
+     * 
+     * @param id identificador da atividade a ser excluida
+     */
     public void deletar(int id) {
         try {
             Connection conexao = ConexaoDoProjeto.connect();
@@ -95,7 +115,13 @@ public class AtividadeDAO {
         }
     }
 
-    // Buscar atividade por ID
+    /**
+     * Busca uma atividade no banco de dados pelo id
+     * 
+     * @param id identificador da atividade
+     * 
+     * @return um objeto do tipo {@code AtividadeVO}
+     */
     public AtividadeVO buscarPorId(int id) {
         AtividadeVO atividade = null;
 
@@ -107,7 +133,7 @@ public class AtividadeDAO {
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
 
-            if (rs.next()) { // se encontrou algum registro
+            if (rs.next()) {
                 atividade = resultSetToAtividade(rs);
             }
 
@@ -118,27 +144,41 @@ public class AtividadeDAO {
             e.printStackTrace();
         }
 
-        return atividade; // retorna o objeto ou null se não encontrou
+        return atividade;
     }
 
-    public AtividadeComMateriaisVO buscarAtividadeComMateriais(int atividadeId){
-        AtividadeVO atividade = buscarPorId(atividadeId);
-        
+    /**
+     * Busca uma atividade especifica que possue materiais
+     * 
+     * @param id identificador da atividade
+     * 
+     * @return um objeto do tipo {@code AtividadeComMateriaisVO}
+     */
+    public AtividadeComMateriaisVO buscarAtividadeComMateriais(int id) {
+        AtividadeVO atividade = buscarPorId(id);
+
         MaterialDAO materialDAO = new MaterialDAO();
-        ArrayList<MaterialNaAtividadeVO> materiais = materialDAO.buscarMateriaisDaAtividade(atividadeId);
+        List<MaterialNaAtividadeVO> materiais = materialDAO.buscarMateriaisDaAtividade(id);
 
         return new AtividadeComMateriaisVO(atividade, materiais);
     }
 
-    public ArrayList<AtividadeNoCanteiroVO> buscarAtividadesDoCanteiro(int canteiroId) {
-         ArrayList<AtividadeNoCanteiroVO> atividadesNoCanteiro = new ArrayList<>();
+    /**
+     * Lista todas as atividades que pertencentes a um canteiro especifico
+     * 
+     * @param id identificador do canteiro
+     * 
+     * @return um {@code List} contendo {@code AtividadeNoCanteiroVO} como elementos
+     */
+    public List<AtividadeNoCanteiroVO> buscarAtividadesDoCanteiro(int id) {
+        List<AtividadeNoCanteiroVO> atividadesNoCanteiro = new ArrayList<>();
 
         try {
             Connection conexao = ConexaoDoProjeto.connect();
             String sql = "SELECT * FROM atividade_canteiro WHERE canteiro_id = ?";
 
             PreparedStatement stmt = conexao.prepareStatement(sql);
-            stmt.setInt(1, canteiroId);
+            stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
@@ -146,11 +186,7 @@ public class AtividadeDAO {
                 float tempoGastoHoras = rs.getFloat("tempo_gasto_horas");
                 Date dataAtividade = rs.getDate("data_atividade");
 
-                atividadesNoCanteiro.add(new AtividadeNoCanteiroVO(
-                    atividade,
-                    tempoGastoHoras,
-                    dataAtividade
-                ));
+                atividadesNoCanteiro.add(new AtividadeNoCanteiroVO(atividade, tempoGastoHoras, dataAtividade));
             }
 
             stmt.close();
@@ -163,6 +199,16 @@ public class AtividadeDAO {
         return atividadesNoCanteiro;
     }
 
+    /**
+     * Retorna a atividade presente no banco de dados contendo todas
+     * as suas informações
+     * 
+     * @param rs {@code ResultSet} contendo os atributos de {@code AtividadeVO}
+     * 
+     * @return um objeto do tipo {@code AtividadeVO}
+     * 
+     * @throws SQLException caso ocorra algum erro no acesso ao banco
+     */
     private AtividadeVO resultSetToAtividade(ResultSet rs) throws SQLException {
         AtividadeVO atividade = new AtividadeVO();
 
