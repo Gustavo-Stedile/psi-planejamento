@@ -2,14 +2,14 @@ package br.edu.ifsp.hto.planejamento.modelo.tests;
 
 import java.util.List;
 
-import br.edu.ifsp.hto.planejamento.modelo.DAO.PlanoDAO;
+import br.edu.ifsp.hto.planejamento.controle.PlanoControle;
 import br.edu.ifsp.hto.planejamento.modelo.VO.PlanoComCanteirosVO;
 import br.edu.ifsp.hto.planejamento.modelo.VO.PlanoVO;
 
 public class PlanoDAOTest {
     public static void main(String[] args) {
-        PlanoDAO planoDAO = new PlanoDAO();
-        List<PlanoVO> planos = planoDAO.listarTodos();
+        PlanoControle planoC = new PlanoControle();
+        List<PlanoVO> planos = planoC.listarTodos();
         planos.forEach(plano -> System.out.println(plano.getNomePlano()));
 
         PlanoVO novo = new PlanoVO(
@@ -20,11 +20,11 @@ public class PlanoDAOTest {
             "nao plantou nada ainda",
             1000
         );
-        // planoDAO.inserir(novo);
+        // planoC.inserir(novo);
 
-        PlanoComCanteirosVO pc = planoDAO.buscarPlanoComCanteiros(1);
+        PlanoComCanteirosVO pc = planoC.buscarPlanoComCanteiros(1);
         pc.getCanteiros().forEach(canteiro -> System.out.println(canteiro.getNome()));
 
-        // planoDAO.deletar(1);
+        // planoC.deletar(1);
     }
 }
