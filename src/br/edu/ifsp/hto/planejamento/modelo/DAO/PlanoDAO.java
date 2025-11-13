@@ -1,7 +1,11 @@
 package br.edu.ifsp.hto.planejamento.modelo.DAO;
 
-import java.sql.*;
-import java.util.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import br.edu.ifsp.hto.planejamento.modelo.ConexaoDoProjeto;
 import br.edu.ifsp.hto.planejamento.modelo.VO.CanteiroVO;
@@ -43,10 +47,10 @@ public class PlanoDAO {
      * 
      * @param id identificador do talhão
      * 
-     * @return um {@code ArrayList} contendo {@code PlanoVO} como elementos
+     * @return um {@code List} contendo {@code PlanoVO} como elementos
      */
-    public ArrayList<PlanoVO> buscarPlanosDoTalhao(int id) {
-        ArrayList<PlanoVO> planos = new ArrayList<>();
+    public List<PlanoVO> buscarPlanosDoTalhao(int id) {
+        List<PlanoVO> planos = new ArrayList<>();
 
         try {
             Connection conn = ConexaoDoProjeto.connect();
@@ -73,7 +77,7 @@ public class PlanoDAO {
     /**
      * Lista todos os planos presentes no banco de dados
      * 
-     * @return um {@code ArrayList} contendo {@code PlanoVO} como elementos
+     * @return um {@code List} contendo {@code PlanoVO} como elementos
      */
     public List<PlanoVO> listarTodos() {
         List<PlanoVO> lista = new ArrayList<>();
@@ -108,7 +112,7 @@ public class PlanoDAO {
         try {
             Connection conn = ConexaoDoProjeto.connect();
 
-            String sql = "UPDATE Plano SET especie_id = ?, talhao_id = ?, nome_plano = ?, descricao = ?, data_inicio = ?, data_fim = ?, observacoes = ?, area_cultivo = ? WHERE id = ?";
+            String sql = "UPDATE plano SET especie_id = ?, talhao_id = ?, nome_plano = ?, descricao = ?, data_inicio = ?, data_fim = ?, observacoes = ?, area_cultivo = ? WHERE id = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, plano.getEspecieId());
             stmt.setInt(2, plano.getTalhaoId());
@@ -182,16 +186,16 @@ public class PlanoDAO {
     }
 
     /**
-     * Lista todos os planos que possuem canteiros
+     * Busca um plano especifico que possue canteiros
      * 
      * @param id identificador do plano
      * 
-     * @return Um objeto do tipo {@code PlanoCanteiroVO}
+     * @return um objeto do tipo {@code PlanoComCanteirosVO}
      */
     public PlanoComCanteirosVO buscarPlanoComCanteiros(int id) {
         PlanoVO plano = buscarPorId(id);
         CanteiroDAO canteiroDAO = new CanteiroDAO();
-        ArrayList<CanteiroVO> canteiros = canteiroDAO.buscarCanteirosDoPlano(id);
+        List<CanteiroVO> canteiros = canteiroDAO.buscarCanteirosDoPlano(id);
 
         return new PlanoComCanteirosVO(plano, canteiros);
     }
