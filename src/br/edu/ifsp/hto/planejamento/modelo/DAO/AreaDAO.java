@@ -1,7 +1,11 @@
 package br.edu.ifsp.hto.planejamento.modelo.DAO;
 
-import java.sql.*;
-import java.util.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import br.edu.ifsp.hto.planejamento.modelo.ConexaoDoProjeto;
 import br.edu.ifsp.hto.planejamento.modelo.VO.AreaComTalhoesVO;
@@ -17,10 +21,10 @@ public class AreaDAO {
      */
     public void inserir(AreaVO area) {
         try {
-            Connection conn = ConexaoDoProjeto.connect();
+            Connection conexao = ConexaoDoProjeto.connect();
 
             String sql = "INSERT INTO area (associado_id, nome, area_total, area_utilizada, ph) VALUES (?, ?, ?, ?, ?)";
-            PreparedStatement stmt = conn.prepareStatement(sql);
+            PreparedStatement stmt = conexao.prepareStatement(sql);
             stmt.setInt(1, area.getAssociadoId());
             stmt.setString(2, area.getNome());
             stmt.setFloat(3, area.getAreaTotal());
@@ -29,7 +33,7 @@ public class AreaDAO {
             stmt.executeUpdate();
 
             stmt.close();
-            conn.close();
+            conexao.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -38,15 +42,15 @@ public class AreaDAO {
     /**
      * Lista todas as áreas presentes no banco de dados
      * 
-     * @return um {@code ArrayList} contendo {@code AreaVO} como elementos
+     * @return um {@code List} contendo {@code AreaVO} como elementos
      */
     public List<AreaVO> listarTodas() {
         List<AreaVO> lista = new ArrayList<>();
 
         try {
-            Connection conn = ConexaoDoProjeto.connect();
+            Connection conexao = ConexaoDoProjeto.connect();
             String sql = "SELECT * FROM area";
-            PreparedStatement stmt = conn.prepareStatement(sql);
+            PreparedStatement stmt = conexao.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
@@ -55,7 +59,7 @@ public class AreaDAO {
 
             rs.close();
             stmt.close();
-            conn.close();
+            conexao.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -71,10 +75,10 @@ public class AreaDAO {
     public void atualizar(AreaVO area) {
 
         try {
-            Connection conn = ConexaoDoProjeto.connect();
+            Connection conexao = ConexaoDoProjeto.connect();
 
             String sql = "UPDATE area SET associado_id = ?, nome = ?, area_total = ?, area_utilizada = ?, ph = ? WHERE id = ?";
-            PreparedStatement stmt = conn.prepareStatement(sql);
+            PreparedStatement stmt = conexao.prepareStatement(sql);
             stmt.setInt(1, area.getAssociadoId());
             stmt.setString(2, area.getNome());
             stmt.setFloat(3, area.getAreaTotal());
@@ -84,7 +88,7 @@ public class AreaDAO {
             stmt.executeUpdate();
 
             stmt.close();
-            conn.close();
+            conexao.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -98,14 +102,14 @@ public class AreaDAO {
     public void deletar(int id) {
 
         try {
-            Connection conn = ConexaoDoProjeto.connect();
+            Connection conexao = ConexaoDoProjeto.connect();
             String sql = "DELETE FROM area WHERE id = ?";
-            PreparedStatement stmt = conn.prepareStatement(sql);
+            PreparedStatement stmt = conexao.prepareStatement(sql);
             stmt.setInt(1, id);
             stmt.executeUpdate();
 
             stmt.close();
-            conn.close();
+            conexao.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -122,24 +126,20 @@ public class AreaDAO {
         AreaVO area = null;
 
         try {
-            Connection conn = ConexaoDoProjeto.connect();
+            Connection conexao = ConexaoDoProjeto.connect();
 
             String sql = "SELECT * FROM area WHERE id = ?";
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            // faz a troca do banco do id pelo id do parametro
+            PreparedStatement stmt = conexao.prepareStatement(sql);
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
-            // cria um objeto area nulo
 
-            // verifica se tem resultado
             if (rs.next()) {
-                // se tiver, instancia o objeto area e preenche com os dados do resultado
                 area = resultSetToArea(rs);
             }
 
             rs.close();
             stmt.close();
-            conn.close();
+            conexao.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -148,16 +148,16 @@ public class AreaDAO {
     }
 
     /**
-     * Lista todas as áreas que possuem talhões
+     * Busca uma área especifica que possui talhões
      * 
      * @param id identificador da área
      * 
-     * @return Um objeto do tipo {@code AreaTalhaoVO}
+     * @return um objeto do tipo {@code AreaTalhaoVO}
      */
     public AreaComTalhoesVO buscarAreaComTalhoes(int id) {
         AreaVO area = buscarPorId(id);
         TalhaoDAO talhaoDAO = new TalhaoDAO();
-        ArrayList<TalhaoVO> talhoes = talhaoDAO.buscarTalhoesDaArea(area.getId());
+        List<TalhaoVO> talhoes = talhaoDAO.buscarTalhoesDaArea(area.getId());
 
         return new AreaComTalhoesVO(area, talhoes);
     }
