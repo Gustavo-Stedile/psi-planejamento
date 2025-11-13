@@ -1,7 +1,11 @@
 package br.edu.ifsp.hto.planejamento.modelo.DAO;
 
-import java.sql.*;
-import java.util.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import br.edu.ifsp.hto.planejamento.modelo.ConexaoDoProjeto;
 import br.edu.ifsp.hto.planejamento.modelo.VO.PlanoVO;
@@ -38,7 +42,7 @@ public class TalhaoDAO {
     /**
      * Lista todos os talhões presentes no banco de dados
      * 
-     * @return um {@code ArrayList} contendo {@code TalhaoVO} como elementos
+     * @return um {@code List} contendo {@code TalhaoVO} como elementos
      */
     public List<TalhaoVO> listarTodos() {
         List<TalhaoVO> talhoes = new ArrayList<>();
@@ -108,7 +112,7 @@ public class TalhaoDAO {
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
 
-            if (rs.next()) { // se encontrou algum registro
+            if (rs.next()) {
                 talhao = resultSetToTalhao(rs);
             }
 
@@ -119,7 +123,7 @@ public class TalhaoDAO {
             e.printStackTrace();
         }
 
-        return talhao; // retorna o objeto ou null se não encontrou
+        return talhao;
     }
 
     /**
@@ -132,7 +136,7 @@ public class TalhaoDAO {
     public TalhaoComPlanosVO buscarTalhaoComPlanos(int id) {
         TalhaoVO talhao = buscarPorId(id);
         PlanoDAO planoDAO = new PlanoDAO();
-        ArrayList<PlanoVO> planos = planoDAO.buscarPlanosDoTalhao(id);
+        List<PlanoVO> planos = planoDAO.buscarPlanosDoTalhao(id);
 
         return new TalhaoComPlanosVO(talhao, planos);
     }
@@ -142,10 +146,10 @@ public class TalhaoDAO {
      * 
      * @param id identificador da área
      * 
-     * @return um {@code ArrayList} contendo {@code TalhaoVO} como elementos
+     * @return um {@code List} contendo {@code TalhaoVO} como elementos
      */
-    public ArrayList<TalhaoVO> buscarTalhoesDaArea(int id) {
-        ArrayList<TalhaoVO> talhoes = new ArrayList<>();
+    public List<TalhaoVO> buscarTalhoesDaArea(int id) {
+        List<TalhaoVO> talhoes = new ArrayList<>();
 
         try {
             Connection conn = ConexaoDoProjeto.connect();
@@ -180,11 +184,11 @@ public class TalhaoDAO {
 
             String sql = "DELETE FROM talhao WHERE id = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setInt(1, id); // define o ID do talhão a ser deletado
+            stmt.setInt(1, id);
 
-            stmt.executeUpdate(); // executa o DELETE
+            stmt.executeUpdate();
             stmt.close();
-            conn.close(); // fecha o statement
+            conn.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
