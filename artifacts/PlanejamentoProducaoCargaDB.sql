@@ -7,7 +7,7 @@ INSERT INTO area (associado_id, nome, area_total, area_utilizada, ph, area_m2) V
 (3, 'Sítio Recanto Feliz', 15.8, 12.5, 5.9, 15800);
 
 -- Inserts para tabela talhao
-INSERT INTO talhao (area_id, nome, area_talhao, observacoes, status_2) VALUES
+INSERT INTO talhao (area_id, nome, area_talhao, observacoes, status) VALUES
 (1, 'Talhão A1', 5.2, 'Solo argiloso, boa drenagem', 'Ativo'),
 (1, 'Talhão A2', 4.8, 'Próximo ao rio, umidade alta', 'Ativo'),
 (2, 'Talhão B1', 3.5, 'Inclinação moderada', 'Inativo'),
@@ -15,7 +15,7 @@ INSERT INTO talhao (area_id, nome, area_talhao, observacoes, status_2) VALUES
 (4, 'Talhão D1', 5.7, 'Área plana, irrigação por gotejamento', 'Ativo');
 
 -- Inserts para tabela plano
-INSERT INTO plano (Especie_id, talhao_area_id, talhao_id, nome_plano, descricao, data_inicio, data_fim, observacoes, area_cultivo) VALUES
+INSERT INTO plano (especie_id, talhao_area_id, talhao_id, nome_plano, descricao, data_inicio, data_fim, observacoes, area_cultivo) VALUES
 (1, 1, 1, 'Plano Alface Primavera', 'Cultivo de alface para primavera', '2024-09-01', '2024-11-15', 'Usar adubo orgânico', 5.0),
 (2, 1, 2, 'Plano Rúcula Verão', 'Cultivo de rúcula para verão', '2024-10-01', '2024-12-10', 'Controlar irrigação', 4.5),
 (3, 3, 4, 'Plano Cenoura Outono', 'Cultivo de cenoura outonal', '2024-08-15', '2024-10-30', 'Solo precisa correção', 6.0),
@@ -23,7 +23,7 @@ INSERT INTO plano (Especie_id, talhao_area_id, talhao_id, nome_plano, descricao,
 (5, 2, 3, 'Plano Espinafre Ano Todo', 'Cultivo contínuo de espinafre', '2024-09-10', '2025-03-10', 'Colheita escalonada', 3.2);
 
 -- Inserts para tabela Canteiro
-INSERT INTO Canteiro (plano_Especie_id, plano_id, nome, area_canteriro_m2, observacoes, kg_gerados) VALUES
+INSERT INTO Canteiro (plano_especie_id, plano_id, nome, area_canteriro_m2, observacoes, kg_gerados) VALUES
 (1, 1, 'Canteiro Alface 1', 120, 'Canteiro sombreado', 280.5),
 (1, 1, 'Canteiro Alface 2', 100, 'Canteiro ensolarado', 240.2),
 (2, 2, 'Canteiro Rúcula 1', 80, 'Irrigação automática', 132.8),
@@ -31,15 +31,15 @@ INSERT INTO Canteiro (plano_Especie_id, plano_id, nome, area_canteriro_m2, obser
 (4, 4, 'Canteiro Beterraba 1', 130, 'Protegido do vento', 345.6);
 
 -- Inserts para tabela atividade
-INSERT INTO atividade (nome_atividade, descricao, observacoes, status_2) VALUES
+INSERT INTO atividade (nome_atividade, descricao, observacoes, status) VALUES
 ('Preparação do Solo', 'Revolvimento e adubação do solo', 'Usar trator para aração', 'Concluída'),
 ('Plantio', 'Plantio das mudas no canteiro', 'Espaçamento de 30cm', 'Concluída'),
 ('Irrigação', 'Sistema de irrigação por gotejamento', 'Verificar vazamentos', 'Em Andamento'),
 ('Adubação', 'Aplicação de adubo orgânico', 'Usar esterco curtido', 'Pendente'),
 ('Colheita', 'Colheita manual dos produtos', 'Realizar pela manhã', 'Pendente');
 
--- Inserts para tabela canteiro_has_atividade
-INSERT INTO canteiro_has_atividade (canteiro_id, atividade_id, tempo_gasto_horas, data_atividade) VALUES
+-- Inserts para tabela atividade_canteiro
+INSERT INTO atividade_canteiro (canteiro_id, atividade_id, tempo_gasto_horas, data_atividade) VALUES
 (1, 1, 8.5, '2024-09-01'),
 (1, 2, 6.0, '2024-09-02'),
 (2, 1, 7.0, '2024-09-01'),
@@ -54,8 +54,8 @@ INSERT INTO material (associado_id, nome, quantidade, unidade_medida) VALUES
 (2, 'Fertilizante NPK', 100.0, 'kg'),
 (3, 'Calcário Dolomítico', 300.0, 'kg');
 
--- Inserts para tabela atividade_has_material
-INSERT INTO atividade_has_material (material_id, atividade_id, quantidade_utilizada) VALUES
+-- Inserts para tabela material_atividade
+INSERT INTO material_atividade (material_id, atividade_id, quantidade_utilizada) VALUES
 (1, 1, 50.0),
 (2, 2, 0.5),
 (3, 3, 25.0),
