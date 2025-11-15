@@ -20,18 +20,18 @@ public class MaterialDAO {
      */
     public void inserir(MaterialVO material) {
         try {
-            Connection conexao = ConexaoDoProjeto.connect();
+            Connection conn = ConexaoDoProjeto.connect();
 
             String sql = "INSERT INTO material (associado_id, nome, quantidade, unidade_medida) VALUES (?, ?, ?, ?)";
-            PreparedStatement stmt = conexao.prepareStatement(sql);
+            PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, material.getAssociadoId());
             stmt.setString(2, material.getNome());
             stmt.setFloat(3, material.getQuantidade());
             stmt.setString(4, material.getUnidadeMedida());
-
             stmt.executeUpdate();
+
             stmt.close();
-            conexao.close();
+            conn.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -46,10 +46,10 @@ public class MaterialDAO {
         List<MaterialVO> lista = new ArrayList<>();
 
         try {
-            Connection conexao = ConexaoDoProjeto.connect();
+            Connection conn = ConexaoDoProjeto.connect();
 
-            String sql = "SELECT * FROM Material";
-            PreparedStatement stmt = conexao.prepareStatement(sql);
+            String sql = "SELECT * FROM material WHERE ativo = true";
+            PreparedStatement stmt = conn.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
@@ -58,7 +58,7 @@ public class MaterialDAO {
 
             rs.close();
             stmt.close();
-            conexao.close();
+            conn.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -67,49 +67,35 @@ public class MaterialDAO {
     }
 
     /**
-     * Atualiza um material presente no banco de dados
+     * Busca um material no banco de dados pelo id
      * 
-     * @param material objeto {@code MaterialVO} contendo os novos dados
-     */
-    public void atualizar(MaterialVO material) {
-        try {
-            Connection conexao = ConexaoDoProjeto.connect();
-
-            String sql = "UPDATE material SET associado_id = ?, nome = ?, quantidade = ?, unidade_medida = ? WHERE id = ?";
-            PreparedStatement stmt = conexao.prepareStatement(sql);
-            stmt.setInt(1, material.getAssociadoId());
-            stmt.setString(2, material.getNome());
-            stmt.setFloat(3, material.getQuantidade());
-            stmt.setString(4, material.getUnidadeMedida());
-            stmt.setInt(5, material.getId());
-
-            stmt.executeUpdate();
-            stmt.close();
-            conexao.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Deleta um material presente no banco de dados
+     * @param id identificador do material
      * 
-     * @param id identificador do material a ser excluido
+     * @return um objeto do tipo {@code MaterialVO}
      */
-    public void deletar(int id) {
-        try {
-            Connection conexao = ConexaoDoProjeto.connect();
+    public MaterialVO buscarPorId(int id) {
+        MaterialVO material = null;
 
-            String sql = "DELETE FROM material WHERE id = ?";
-            PreparedStatement stmt = conexao.prepareStatement(sql);
+        try {
+            Connection conn = ConexaoDoProjeto.connect();
+
+            String sql = "SELECT * FROM material WHERE id = ? AND ativo = true";
+            PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
 
-            stmt.executeUpdate();
+            if (rs.next()) {
+                material = resultSetToMaterial(rs);
+            }
+
+            rs.close();
             stmt.close();
-            conexao.close();
+            conn.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        return material;
     }
 
     /**
@@ -123,9 +109,10 @@ public class MaterialDAO {
         List<MaterialNaAtividadeVO> materiais = new ArrayList<>();
         
         try {
-            Connection conexao = ConexaoDoProjeto.connect();
-            String sql = "SELECT * FROM material_atividade WHERE atividade_id = ?";
-            PreparedStatement stmt = conexao.prepareStatement(sql);
+            Connection conn = ConexaoDoProjeto.connect();
+
+            String sql = "SELECT * FROM material_atividade WHERE atividade_id = ? AND ativo = true";
+            PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, atividadeId);
             ResultSet rs = stmt.executeQuery();
 
@@ -137,45 +124,65 @@ public class MaterialDAO {
 
             stmt.close();
             rs.close();
-            conexao.close();
+            conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
         return materiais;
     }
-
+    
     /**
-     * Busca um material no banco de dados pelo id
+     * Atualiza um material presente no banco de dados
      * 
-     * @param id identificador do material
-     * 
-     * @return um objeto do tipo {@code MaterialVO}
+     * @param material objeto {@code MaterialVO} contendo os novos dados
      */
-    public MaterialVO buscarPorId(int id) {
-        MaterialVO material = null;
+    public void atualizar(MaterialVO material) {
         try {
-            Connection conexao = ConexaoDoProjeto.connect();
+            Connection conn = ConexaoDoProjeto.connect();
 
-            String sql = "SELECT * FROM material WHERE id = ?";
-            PreparedStatement stmt = conexao.prepareStatement(sql);
-            stmt.setInt(1, id);
-            ResultSet rs = stmt.executeQuery();
+            String sql = "UPDATE material SET associado_id = ?, nome = ?, quantidade = ?, unidade_medida = ? WHERE id = ? AND ativo = true";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, material.getAssociadoId());
+            stmt.setString(2, material.getNome());
+            stmt.setFloat(3, material.getQuantidade());
+            stmt.setString(4, material.getUnidadeMedida());
+            stmt.setInt(5, material.getId());
+            stmt.executeUpdate();
 
-            if (rs.next()) {
-                material = resultSetToMaterial(rs);
-            }
-
-            rs.close();
             stmt.close();
-            conexao.close();
+            conn.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        return material;
     }
-    
+
+    /**
+     * Deleta um material presente no banco de dados
+     * 
+     * @param id identificador do material a ser excluido
+     */
+    public void deletar(int id) {
+        try {
+            Connection conn = ConexaoDoProjeto.connect();
+
+            String sql = "UPDATE material SET ativo = false WHERE id = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+
+            sql = "UPDATE material_atividade SET ativo = false WHERE material_id = ?";
+            stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+
+            stmt.close();
+            conn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * Retorna o material presente no banco de dados contendo todas
      * as suas informações
@@ -188,11 +195,13 @@ public class MaterialDAO {
      */
     private MaterialVO resultSetToMaterial(ResultSet rs) throws SQLException {
         MaterialVO material = new MaterialVO();
+        
         material.setId(rs.getInt("id"));
         material.setAssociadoId(rs.getInt("associado_id"));
         material.setNome(rs.getString("nome"));
         material.setQuantidade(rs.getFloat("quantidade"));
         material.setUnidadeMedida(rs.getString("unidade_medida"));
+
         return material;
     }
 }

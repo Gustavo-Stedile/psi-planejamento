@@ -24,10 +24,10 @@ public class AtividadeDAO {
     public void inserir(AtividadeVO atividade) {
 
         try {
-            Connection conexao = ConexaoDoProjeto.connect();
+            Connection conn = ConexaoDoProjeto.connect();
 
             String sql = "INSERT INTO atividade (nome_atividade, descricao, observacoes, status) VALUES (?, ?, ?, ?)";
-            PreparedStatement stmt = conexao.prepareStatement(sql);
+            PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, atividade.getNomeAtividade());
             stmt.setString(2, atividade.getDescricao());
             stmt.setString(3, atividade.getObervacoes());
@@ -36,6 +36,30 @@ public class AtividadeDAO {
             stmt.executeUpdate();
             stmt.close();
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Adiciona um material na atividade
+     * 
+     * @param materialId identificador do material
+     * @param atividadeId identificador da atividade
+     * @param quantidadeUtilizada quantidade de material a ser utilizada
+     */
+    public void adicionarMaterial(int materialId, int atividadeId, float quantidadeUtilizada) {
+        try {
+            Connection conn = ConexaoDoProjeto.connect();
+            
+            String sql = "INSERT INTO material_atividade (material_id, atividade_id, quantidade_utilizada) VALUES (?, ?, ?)";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, materialId);
+            stmt.setInt(2, atividadeId);
+            stmt.executeUpdate();
+
+            stmt.close();
+            conn.close();
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
@@ -49,10 +73,10 @@ public class AtividadeDAO {
         List<AtividadeVO> lista = new ArrayList<>();
 
         try {
-            Connection conexao = ConexaoDoProjeto.connect();
+            Connection conn = ConexaoDoProjeto.connect();
 
-            String sql = "SELECT * FROM atividade";
-            PreparedStatement stmt = conexao.prepareStatement(sql);
+            String sql = "SELECT * FROM atividade WHERE ativo = true";
+            PreparedStatement stmt = conn.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
@@ -61,58 +85,12 @@ public class AtividadeDAO {
 
             rs.close();
             stmt.close();
-            conexao.close();
+            conn.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         return lista;
-    }
-
-    /**
-     * Atualiza uma área presente no banco de dados
-     * 
-     * @param atividade objeto {@code AtividadeVO} contendo os novos dados
-     */
-    public void atualizar(AtividadeVO atividade) {
-        try {
-            Connection conexao = ConexaoDoProjeto.connect();
-
-            String sql = "UPDATE atividade SET nome_atividade = ?, descricao = ?, observacoes = ?, status = ? WHERE id = ?";
-            PreparedStatement stmt = conexao.prepareStatement(sql);
-            stmt.setString(1, atividade.getNomeAtividade());
-            stmt.setString(2, atividade.getDescricao());
-            stmt.setString(3, atividade.getObervacoes());
-            stmt.setString(4, atividade.getStatus());
-            stmt.setInt(5, atividade.getId());
-
-            stmt.executeUpdate();
-            stmt.close();
-            conexao.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Deleta uma atividade presente no banco de dados
-     * 
-     * @param id identificador da atividade a ser excluida
-     */
-    public void deletar(int id) {
-        try {
-            Connection conexao = ConexaoDoProjeto.connect();
-
-            String sql = "DELETE FROM atividade WHERE id = ?";
-            PreparedStatement stmt = conexao.prepareStatement(sql);
-            stmt.setInt(1, id);
-
-            stmt.executeUpdate();
-            stmt.close();
-            conexao.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     /**
@@ -126,10 +104,10 @@ public class AtividadeDAO {
         AtividadeVO atividade = null;
 
         try {
-            Connection conexao = ConexaoDoProjeto.connect();
+            Connection conn = ConexaoDoProjeto.connect();
 
-            String sql = "SELECT * FROM atividade WHERE id = ?";
-            PreparedStatement stmt = conexao.prepareStatement(sql);
+            String sql = "SELECT * FROM atividade WHERE id = ? AND ativo = true";
+            PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
 
@@ -139,7 +117,7 @@ public class AtividadeDAO {
 
             rs.close();
             stmt.close();
-            conexao.close();
+            conn.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -174,10 +152,10 @@ public class AtividadeDAO {
         List<AtividadeNoCanteiroVO> atividadesNoCanteiro = new ArrayList<>();
 
         try {
-            Connection conexao = ConexaoDoProjeto.connect();
-            String sql = "SELECT * FROM atividade_canteiro WHERE canteiro_id = ?";
+            Connection conn = ConexaoDoProjeto.connect();
+            String sql = "SELECT * FROM atividade_canteiro WHERE canteiro_id = ? AND ativo = true";
 
-            PreparedStatement stmt = conexao.prepareStatement(sql);
+            PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
 
@@ -191,12 +169,91 @@ public class AtividadeDAO {
 
             stmt.close();
             rs.close();
-            conexao.close();
+            conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
         return atividadesNoCanteiro;
+    }
+
+    /**
+     * Atualiza uma área presente no banco de dados
+     * 
+     * @param atividade objeto {@code AtividadeVO} contendo os novos dados
+     */
+    public void atualizar(AtividadeVO atividade) {
+        try {
+            Connection conn = ConexaoDoProjeto.connect();
+
+            String sql = "UPDATE atividade SET nome_atividade = ?, descricao = ?, observacoes = ?, status = ? WHERE id = ? AND ativo = true";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, atividade.getNomeAtividade());
+            stmt.setString(2, atividade.getDescricao());
+            stmt.setString(3, atividade.getObervacoes());
+            stmt.setString(4, atividade.getStatus());
+            stmt.setInt(5, atividade.getId());
+
+            stmt.executeUpdate();
+            stmt.close();
+            conn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Deleta uma atividade presente no banco de dados
+     * 
+     * @param id identificador da atividade a ser excluida
+     */
+    public void deletar(int id) {
+        try {
+            Connection conn = ConexaoDoProjeto.connect();
+
+            String sql = "UPDATE atividade SET ativo = false WHERE id = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+
+            sql = "UPDATE material_atividade SET ativo = false WHERE atividade_id = ?";
+            stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+
+            sql = "UPDATE atividade_canteiro SET ativo = false WHERE atividade_id = ?";
+            stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+
+            stmt.close();
+            conn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Remove um material de uma atividade específica
+     * 
+     * @param materialId identificador do material
+     * @param atividadeId identificador da atividade
+     */
+    public void removerMaterial(int materialId, int atividadeId) {
+        try {
+            Connection conn = ConexaoDoProjeto.connect();
+            
+            String sql = "UPDATE material_atividade SET ativo = false WHERE material_id = ? AND atividade_id = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, materialId);
+            stmt.setInt(2, atividadeId);
+            stmt.executeUpdate();
+
+            stmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

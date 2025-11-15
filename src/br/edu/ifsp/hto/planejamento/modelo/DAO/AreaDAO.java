@@ -21,10 +21,10 @@ public class AreaDAO {
      */
     public void inserir(AreaVO area) {
         try {
-            Connection conexao = ConexaoDoProjeto.connect();
+            Connection conn = ConexaoDoProjeto.connect();
 
             String sql = "INSERT INTO area (associado_id, nome, area_total, area_utilizada, ph) VALUES (?, ?, ?, ?, ?)";
-            PreparedStatement stmt = conexao.prepareStatement(sql);
+            PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, area.getAssociadoId());
             stmt.setString(2, area.getNome());
             stmt.setFloat(3, area.getAreaTotal());
@@ -33,7 +33,7 @@ public class AreaDAO {
             stmt.executeUpdate();
 
             stmt.close();
-            conexao.close();
+            conn.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -48,9 +48,9 @@ public class AreaDAO {
         List<AreaVO> lista = new ArrayList<>();
 
         try {
-            Connection conexao = ConexaoDoProjeto.connect();
-            String sql = "SELECT * FROM area";
-            PreparedStatement stmt = conexao.prepareStatement(sql);
+            Connection conn = ConexaoDoProjeto.connect();
+            String sql = "SELECT * FROM area WHERE ativo = true";
+            PreparedStatement stmt = conn.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
@@ -59,39 +59,12 @@ public class AreaDAO {
 
             rs.close();
             stmt.close();
-            conexao.close();
+            conn.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         return lista;
-    }
-
-    /**
-     * Atualiza uma área presente no banco de dados
-     * 
-     * @param area objeto {@code AreaVO} contendo os novos dados
-     */
-    public void atualizar(AreaVO area) {
-
-        try {
-            Connection conexao = ConexaoDoProjeto.connect();
-
-            String sql = "UPDATE area SET associado_id = ?, nome = ?, area_total = ?, area_utilizada = ?, ph = ? WHERE id = ?";
-            PreparedStatement stmt = conexao.prepareStatement(sql);
-            stmt.setInt(1, area.getAssociadoId());
-            stmt.setString(2, area.getNome());
-            stmt.setFloat(3, area.getAreaTotal());
-            stmt.setFloat(4, area.getAreaUtilizada());
-            stmt.setFloat(5, area.getPh());
-            stmt.setInt(6, area.getId());
-            stmt.executeUpdate();
-
-            stmt.close();
-            conexao.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     /**
@@ -102,14 +75,17 @@ public class AreaDAO {
     public void deletar(int id) {
 
         try {
-            Connection conexao = ConexaoDoProjeto.connect();
-            String sql = "DELETE FROM area WHERE id = ?";
-            PreparedStatement stmt = conexao.prepareStatement(sql);
+            Connection conn = ConexaoDoProjeto.connect();
+            String sql = "UPDATE area SET ativo = false WHERE id = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, id);
             stmt.executeUpdate();
 
+            TalhaoDAO talhaoDAO = new TalhaoDAO();
+            talhaoDAO.buscarTalhoesDaArea(id).forEach(t -> talhaoDAO.deletar(t.getId()));
+
             stmt.close();
-            conexao.close();
+            conn.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -126,10 +102,10 @@ public class AreaDAO {
         AreaVO area = null;
 
         try {
-            Connection conexao = ConexaoDoProjeto.connect();
+            Connection conn = ConexaoDoProjeto.connect();
 
-            String sql = "SELECT * FROM area WHERE id = ?";
-            PreparedStatement stmt = conexao.prepareStatement(sql);
+            String sql = "SELECT * FROM area WHERE id = ? AND ativo = true";
+            PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
 
@@ -139,7 +115,7 @@ public class AreaDAO {
 
             rs.close();
             stmt.close();
-            conexao.close();
+            conn.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -156,10 +132,38 @@ public class AreaDAO {
      */
     public AreaComTalhoesVO buscarAreaComTalhoes(int id) {
         AreaVO area = buscarPorId(id);
+
         TalhaoDAO talhaoDAO = new TalhaoDAO();
         List<TalhaoVO> talhoes = talhaoDAO.buscarTalhoesDaArea(area.getId());
 
         return new AreaComTalhoesVO(area, talhoes);
+    }
+
+    /**
+     * Atualiza uma área presente no banco de dados
+     * 
+     * @param area objeto {@code AreaVO} contendo os novos dados
+     */
+    public void atualizar(AreaVO area) {
+
+        try {
+            Connection conn = ConexaoDoProjeto.connect();
+
+            String sql = "UPDATE area SET associado_id = ?, nome = ?, area_total = ?, area_utilizada = ?, ph = ? WHERE id = ? AND ativo = true";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, area.getAssociadoId());
+            stmt.setString(2, area.getNome());
+            stmt.setFloat(3, area.getAreaTotal());
+            stmt.setFloat(4, area.getAreaUtilizada());
+            stmt.setFloat(5, area.getPh());
+            stmt.setInt(6, area.getId());
+            stmt.executeUpdate();
+
+            stmt.close();
+            conn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**

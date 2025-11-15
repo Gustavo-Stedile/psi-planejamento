@@ -1,5 +1,6 @@
 package br.edu.ifsp.hto.planejamento.controle;
 
+import java.sql.Date;
 import java.util.List;
 
 import br.edu.ifsp.hto.planejamento.modelo.DAO.*;
@@ -109,6 +110,19 @@ public class PlanejamentoControle {
     }
 
     /**
+     * Adiciona um material na atividade
+     * 
+     * @param materialId identificador do material
+     * @param atividadeId identificador da atividade
+     * @param quantidadeUtilizada quantidade de material a ser utilizada
+     * 
+     * @see AtividadeDAO#adicionarMaterial(int, int, float)
+     */
+    public void adicionarMaterial(int materialId, int atividadeId, float quantidadeUtilizada) {
+        atividadeDAO.adicionarMaterial(materialId, atividadeId, quantidadeUtilizada);
+    }
+
+    /**
      * Lista todas as atividades presentes no banco de dados
      * 
      * @return um {@code List} contendo {@code AtividadeVO} como elementos
@@ -180,6 +194,18 @@ public class PlanejamentoControle {
         atividadeDAO.deletar(id);
     }
 
+    /**
+     * Remove um material de uma atividade específica
+     * 
+     * @param materialId identificador do material
+     * @param atividadeId identificador da atividade
+     * 
+     * @see AtividadeDAO#removerMaterial(int, int)
+     */
+    public void removerMaterial(int materialId, int atividadeId) {
+        atividadeDAO.removerMaterial(materialId, atividadeId);
+    }
+
     // ---------------| CanteiroControle |---------------//
 
     /**
@@ -191,6 +217,20 @@ public class PlanejamentoControle {
      */
     public void inserir(CanteiroVO canteiro) {
         canteiroDAO.inserir(canteiro);
+    }
+
+    /**
+     * Adiciona uma atividade no canteiro
+     * 
+     * @param canteiroId identificador do canteiro
+     * @param atividadeId identificador da atividade
+     * @param tempoGastoHoras tempo a ser gasto na atividade
+     * @param dataAtividade data que será realizada a atividade
+     * 
+     * @see CanteiroDAO#adicionarAtividade(int, int, float, Date)
+     */
+    public void adicionarAtividade(int canteiroId, int atividadeId, float tempoGastoHoras, Date dataAtividade) {
+        canteiroDAO.adicionarAtividade(canteiroId, atividadeId, tempoGastoHoras, dataAtividade);
     }
 
     /**
@@ -233,7 +273,7 @@ public class PlanejamentoControle {
     /**
      * Busca um canteiro especifico que possue atividades
      * 
-     * @param id identificador do cabteiro
+     * @param id identificador do canteiro
      * 
      * @return um objeto do tipo {@code CanteiroComAtividadesVO}
      * 
@@ -263,6 +303,18 @@ public class PlanejamentoControle {
      */
     public void deletarCanteiro(int id) {
         canteiroDAO.deletar(id);
+    }
+
+    /**
+     * Remove uma atividade de um canteiro específico
+     * 
+     * @param canteiroId identificador do canteiro
+     * @param atividadeId identificador da atividade
+     * 
+     * @see CanteiroDAO#removerAtividade(int, int)
+     */
+    public void removerAtividade(int canteiroId, int atividadeId) {
+        canteiroDAO.removerAtividade(canteiroId, atividadeId);
     }
 
     // ---------------| MaterialControle |---------------//

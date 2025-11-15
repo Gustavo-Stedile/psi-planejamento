@@ -50,7 +50,7 @@ public class TalhaoDAO {
         try {
             Connection conn = ConexaoDoProjeto.connect();
 
-            String sql = "SELECT * FROM talhao";
+            String sql = "SELECT * FROM talhao WHERE ativo = true";
             PreparedStatement stmt = conn.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
 
@@ -69,32 +69,6 @@ public class TalhaoDAO {
     }
 
     /**
-     * Atualiza um talhão presente no banco de dados
-     * 
-     * @param talhao objeto {@code TalhaoVO} contendo os novos dados
-     */
-    public void atualizar(TalhaoVO talhao) {
-        try {
-            Connection conn = ConexaoDoProjeto.connect();
-
-            String sql = "UPDATE talhao SET area_id = ?, nome = ?, area_talhao = ?, observacoes = ?, status = ? WHERE id = ?";
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setInt(1, talhao.getAreaId());
-            stmt.setString(2, talhao.getNome());
-            stmt.setFloat(3, talhao.getAreaTalhao());
-            stmt.setString(4, talhao.getObservacoes());
-            stmt.setString(5, talhao.getStatus());
-            stmt.setInt(6, talhao.getId());
-            stmt.executeUpdate();
-
-            stmt.close();
-            conn.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
      * Busca um talhão no banco de dados pelo id
      * 
      * @param id identificador do talhão
@@ -107,7 +81,7 @@ public class TalhaoDAO {
         try {
             Connection conn = ConexaoDoProjeto.connect();
 
-            String sql = "SELECT * FROM talhao WHERE id = ?";
+            String sql = "SELECT * FROM talhao WHERE id = ? AND ativo = true";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
@@ -135,6 +109,7 @@ public class TalhaoDAO {
      */
     public TalhaoComPlanosVO buscarTalhaoComPlanos(int id) {
         TalhaoVO talhao = buscarPorId(id);
+        
         PlanoDAO planoDAO = new PlanoDAO();
         List<PlanoVO> planos = planoDAO.buscarPlanosDoTalhao(id);
 
@@ -154,7 +129,7 @@ public class TalhaoDAO {
         try {
             Connection conn = ConexaoDoProjeto.connect();
 
-            String sql = "SELECT * FROM Talhao WHERE area_id = ?";
+            String sql = "SELECT * FROM Talhao WHERE area_id = ? AND ativo = true";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
@@ -174,6 +149,32 @@ public class TalhaoDAO {
     }
 
     /**
+     * Atualiza um talhão presente no banco de dados
+     * 
+     * @param talhao objeto {@code TalhaoVO} contendo os novos dados
+     */
+    public void atualizar(TalhaoVO talhao) {
+        try {
+            Connection conn = ConexaoDoProjeto.connect();
+
+            String sql = "UPDATE talhao SET area_id = ?, nome = ?, area_talhao = ?, observacoes = ?, status = ? WHERE id = ? AND ativo = true";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, talhao.getAreaId());
+            stmt.setString(2, talhao.getNome());
+            stmt.setFloat(3, talhao.getAreaTalhao());
+            stmt.setString(4, talhao.getObservacoes());
+            stmt.setString(5, talhao.getStatus());
+            stmt.setInt(6, talhao.getId());
+            stmt.executeUpdate();
+
+            stmt.close();
+            conn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    /**
      * Deleta um talhão presente no banco de dados
      * 
      * @param id identificador do talhão a ser excluido
@@ -182,11 +183,14 @@ public class TalhaoDAO {
         try {
             Connection conn = ConexaoDoProjeto.connect();
 
-            String sql = "DELETE FROM talhao WHERE id = ?";
+            String sql = "UPDATE talhao SET ativo = false WHERE id = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, id);
-
             stmt.executeUpdate();
+
+            PlanoDAO planoDAO = new PlanoDAO();
+            planoDAO.buscarPlanosDoTalhao(id).forEach(p -> planoDAO.deletar(p.getId()));
+
             stmt.close();
             conn.close();
         } catch (Exception e) {

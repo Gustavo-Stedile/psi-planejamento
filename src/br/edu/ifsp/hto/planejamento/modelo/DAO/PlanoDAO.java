@@ -43,38 +43,6 @@ public class PlanoDAO {
     }
 
     /**
-     * Busca todos os planos pertencentes a um talhão
-     * 
-     * @param id identificador do talhão
-     * 
-     * @return um {@code List} contendo {@code PlanoVO} como elementos
-     */
-    public List<PlanoVO> buscarPlanosDoTalhao(int id) {
-        List<PlanoVO> planos = new ArrayList<>();
-
-        try {
-            Connection conn = ConexaoDoProjeto.connect();
-
-            String sql = "SELECT * FROM plano WHERE talhao_id = ?";
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setInt(1, id);
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                planos.add(resultSetToPlano(rs));
-            }
-
-            stmt.close();
-            rs.close();
-            conn.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return planos;
-    }
-
-    /**
      * Lista todos os planos presentes no banco de dados
      * 
      * @return um {@code List} contendo {@code PlanoVO} como elementos
@@ -85,7 +53,7 @@ public class PlanoDAO {
         try {
             Connection conn = ConexaoDoProjeto.connect();
 
-            String sql = "SELECT * FROM plano";
+            String sql = "SELECT * FROM plano WHERE ativo = true";
             PreparedStatement stmt = conn.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
 
@@ -104,56 +72,6 @@ public class PlanoDAO {
     }
 
     /**
-     * Atualiza um plano presente no banco de dados
-     * 
-     * @param talhao objeto {@code PlanoVO} contendo os novos dados
-     */
-    public void atualizar(PlanoVO plano) {
-        try {
-            Connection conn = ConexaoDoProjeto.connect();
-
-            String sql = "UPDATE plano SET especie_id = ?, talhao_id = ?, nome_plano = ?, descricao = ?, data_inicio = ?, data_fim = ?, observacoes = ?, area_cultivo = ? WHERE id = ?";
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setInt(1, plano.getEspecieId());
-            stmt.setInt(2, plano.getTalhaoId());
-            stmt.setString(3, plano.getNomePlano());
-            stmt.setString(4, plano.getDescricao());
-            stmt.setDate(5, plano.getDataInicio());
-            stmt.setDate(6, plano.getDataFim());
-            stmt.setString(7, plano.getObservacoes());
-            stmt.setFloat(8, plano.getAreaCultivo());
-            stmt.setInt(9, plano.getId());
-
-            stmt.executeUpdate();
-            stmt.close();
-            conn.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Deleta um plano presente no banco de dados
-     * 
-     * @param id identificador do plano a ser excluido
-     */
-    public void deletar(int id) {
-        try {
-            Connection conn = ConexaoDoProjeto.connect();
-
-            String sql = "DELETE FROM plano WHERE id = ?";
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setInt(1, id);
-
-            stmt.executeUpdate();
-            stmt.close();
-            conn.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
      * Busca um plano no banco de dados pelo id
      * 
      * @param id identificador do plano
@@ -166,7 +84,7 @@ public class PlanoDAO {
         try {
             Connection conn = ConexaoDoProjeto.connect();
 
-            String sql = "SELECT * FROM plano WHERE id = ?";
+            String sql = "SELECT * FROM plano WHERE id = ? AND ativo = true";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
@@ -194,10 +112,96 @@ public class PlanoDAO {
      */
     public PlanoComCanteirosVO buscarPlanoComCanteiros(int id) {
         PlanoVO plano = buscarPorId(id);
+
         CanteiroDAO canteiroDAO = new CanteiroDAO();
         List<CanteiroVO> canteiros = canteiroDAO.buscarCanteirosDoPlano(id);
 
         return new PlanoComCanteirosVO(plano, canteiros);
+    }
+    
+    /**
+     * Busca todos os planos pertencentes a um talhão
+     * 
+     * @param id identificador do talhão
+     * 
+     * @return um {@code List} contendo {@code PlanoVO} como elementos
+     */
+    public List<PlanoVO> buscarPlanosDoTalhao(int id) {
+        List<PlanoVO> planos = new ArrayList<>();
+
+        try {
+            Connection conn = ConexaoDoProjeto.connect();
+
+            String sql = "SELECT * FROM plano WHERE talhao_id = ? AND ativo = true";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                planos.add(resultSetToPlano(rs));
+            }
+
+            stmt.close();
+            rs.close();
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return planos;
+    }
+
+    /**
+     * Atualiza um plano presente no banco de dados
+     * 
+     * @param talhao objeto {@code PlanoVO} contendo os novos dados
+     */
+    public void atualizar(PlanoVO plano) {
+        try {
+            Connection conn = ConexaoDoProjeto.connect();
+
+            String sql = "UPDATE plano SET especie_id = ?, talhao_id = ?, nome_plano = ?, descricao = ?, data_inicio = ?, data_fim = ?, observacoes = ?, area_cultivo = ? WHERE id = ? AND ativo = true";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, plano.getEspecieId());
+            stmt.setInt(2, plano.getTalhaoId());
+            stmt.setString(3, plano.getNomePlano());
+            stmt.setString(4, plano.getDescricao());
+            stmt.setDate(5, plano.getDataInicio());
+            stmt.setDate(6, plano.getDataFim());
+            stmt.setString(7, plano.getObservacoes());
+            stmt.setFloat(8, plano.getAreaCultivo());
+            stmt.setInt(9, plano.getId());
+            stmt.executeUpdate();
+            
+            stmt.close();
+            conn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Deleta um plano presente no banco de dados
+     * 
+     * @param id identificador do plano a ser excluido
+     */
+    public void deletar(int id) {
+        try {
+            Connection conn = ConexaoDoProjeto.connect();
+
+            String sql = "UPDATE plano SET ativo = false WHERE id = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+
+            CanteiroDAO canteiroDAO = new CanteiroDAO();
+            canteiroDAO.buscarCanteirosDoPlano(id).forEach(c -> canteiroDAO.deletar(c.getId()));
+
+            stmt.close();
+            conn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**

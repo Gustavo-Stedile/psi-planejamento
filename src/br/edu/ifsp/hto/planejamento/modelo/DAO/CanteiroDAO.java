@@ -1,6 +1,7 @@
 package br.edu.ifsp.hto.planejamento.modelo.DAO;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -30,11 +31,38 @@ public class CanteiroDAO {
             stmt.setFloat(3, canteiro.getAreaCanteiroM2());
             stmt.setString(4, canteiro.getObservacoes());
             stmt.setFloat(5, canteiro.getKgGerados());
-
             stmt.executeUpdate();
+
             stmt.close();
             conn.close();
-        } catch (Exception e) {
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Adiciona uma atividade no canteiro
+     * 
+     * @param canteiroId identificador do canteiro
+     * @param atividadeId identificador da atividade
+     * @param tempoGastoHoras tempo a ser gasto na atividade
+     * @param dataAtividade data que será realizada a atividade
+     */
+    public void adicionarAtividade(int canteiroId, int atividadeId, float tempoGastoHoras, Date dataAtividade) {
+        try{
+            Connection conn = ConexaoDoProjeto.connect();
+
+            String sql = "INSERT INTO atividade_canteiro (canteiro_id, atividade_id, tempo_gasto_horas, data_atividade) VALUES (?, ?, ?, ?)";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, canteiroId);
+            stmt.setInt(2, atividadeId);
+            stmt.setFloat(3, tempoGastoHoras);
+            stmt.setDate(4, dataAtividade);
+            stmt.executeUpdate();
+
+            stmt.close();
+            conn.close();
+        }catch(SQLException e){
             e.printStackTrace();
         }
     }
@@ -50,7 +78,7 @@ public class CanteiroDAO {
         try {
             Connection conn = ConexaoDoProjeto.connect();
 
-            String sql = "SELECT * FROM canteiro";
+            String sql = "SELECT * FROM canteiro WHERE ativo = true";
             PreparedStatement stmt = conn.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
 
@@ -61,7 +89,7 @@ public class CanteiroDAO {
             rs.close();
             stmt.close();
             conn.close();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -81,7 +109,7 @@ public class CanteiroDAO {
         try {
             Connection conn = ConexaoDoProjeto.connect();
 
-            String sql = "SELECT * FROM canteiro WHERE id = ?";
+            String sql = "SELECT * FROM canteiro WHERE id = ? AND ativo = true";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
@@ -93,7 +121,7 @@ public class CanteiroDAO {
             rs.close();
             stmt.close();
             conn.close();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -103,7 +131,7 @@ public class CanteiroDAO {
     /**
      * Busca todos os canteiros pertencentes a um plano
      * 
-     * @param id identificador do canteiro
+     * @param id identificador do plano
      * 
      * @return um {@code List} contendo {@code CanteiroVO} como elementos
      */
@@ -112,7 +140,7 @@ public class CanteiroDAO {
 
         try {
             Connection conn = ConexaoDoProjeto.connect();
-            String sql = "SELECT * FROM canteiro WHERE plano_id = ?";
+            String sql = "SELECT * FROM canteiro WHERE plano_id = ? AND ativo = true";
 
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, id);
@@ -121,17 +149,31 @@ public class CanteiroDAO {
             while (rs.next()) {
                 canteiros.add(resultSetToCanteiro(rs));
             }
-
-            stmt.close();
-            conn.close();
+            
             rs.close();
+            stmt.close();
             conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
         return canteiros;
+    }
 
+    /**
+     * Busca um canteiro especifico que possue atividades
+     * 
+     * @param id identificador do canteiro
+     * 
+     * @return um objeto do tipo {@code CanteiroComAtividadesVO}
+     */
+    public CanteiroComAtividadesVO buscarCanteiroComAtividades(int id) {
+        CanteiroVO canteiro = buscarPorId(id);
+
+        AtividadeDAO atividadeDAO = new AtividadeDAO();
+        List<AtividadeNoCanteiroVO> atividades = atividadeDAO.buscarAtividadesDoCanteiro(id);
+
+        return new CanteiroComAtividadesVO(canteiro, atividades);
     }
 
     /**
@@ -143,7 +185,7 @@ public class CanteiroDAO {
         try {
             Connection conn = ConexaoDoProjeto.connect();
 
-            String sql = "UPDATE canteiro SET plano_id = ?, nome = ?, area_canteiro_m2 = ?, observacoes = ?, kg_gerados = ? WHERE id = ?";
+            String sql = "UPDATE canteiro SET plano_id = ?, nome = ?, area_canteiro_m2 = ?, observacoes = ?, kg_gerados = ? WHERE id = ? AND ativo = true";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, canteiro.getPlanoId());
             stmt.setString(2, canteiro.getNome());
@@ -151,11 +193,11 @@ public class CanteiroDAO {
             stmt.setString(4, canteiro.getObservacoes());
             stmt.setFloat(5, canteiro.getKgGerados());
             stmt.setInt(6, canteiro.getId());
-
             stmt.executeUpdate();
+
             stmt.close();
             conn.close();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
@@ -169,31 +211,44 @@ public class CanteiroDAO {
         try {
             Connection conn = ConexaoDoProjeto.connect();
 
-            String sql = "DELETE FROM canteiro WHERE id = ?";
+            String sql = "UPDATE canteiro SET ativo = false WHERE id = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, id);
             stmt.executeUpdate();
+
+            sql = "UPDATE atividade_canteiro SET ativo = false WHERE canteiro_id = ?";
+            stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+
             stmt.close();
             conn.close();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     /**
-     * Busca um canteiro especifico que possue atividades
+     * Remove uma atividade de um canteiro específico
      * 
-     * @param id identificador do cabteiro
-     * 
-     * @return um objeto do tipo {@code CanteiroComAtividadesVO}
+     * @param canteiroId identificador do canteiro
+     * @param atividadeId identificador da atividade
      */
-    public CanteiroComAtividadesVO buscarCanteiroComAtividades(int id) {
-        CanteiroVO canteiro = buscarPorId(id);
+    public void removerAtividade(int canteiroId, int atividadeId) {
+        try {
+            Connection conn = ConexaoDoProjeto.connect();
 
-        AtividadeDAO atividadeDAO = new AtividadeDAO();
-        List<AtividadeNoCanteiroVO> atividades = atividadeDAO.buscarAtividadesDoCanteiro(id);
+            String sql = "UPDATE atividade_canteiro SET ativo = false WHERE canteiro_id = ? AND atividade_id = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, canteiroId);
+            stmt.setInt(2, atividadeId);
+            stmt.executeUpdate();
 
-        return new CanteiroComAtividadesVO(canteiro, atividades);
+            stmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
     
     /**

@@ -2,7 +2,7 @@ package br.edu.ifsp.hto.planejamento.modelo.tests;
 
 import java.util.List;
 
-import br.edu.ifsp.hto.planejamento.controle.AtividadeControle;
+import br.edu.ifsp.hto.planejamento.controle.PlanejamentoControle;
 import br.edu.ifsp.hto.planejamento.modelo.VO.AtividadeComMateriaisVO;
 import br.edu.ifsp.hto.planejamento.modelo.VO.AtividadeNoCanteiroVO;
 import br.edu.ifsp.hto.planejamento.modelo.VO.AtividadeVO;
@@ -10,26 +10,22 @@ import br.edu.ifsp.hto.planejamento.modelo.VO.AtividadeVO;
 public class AtividadeDAOTest {
     
     public static void main(String[] args) {
-        AtividadeControle atividadeC = new AtividadeControle();
+        PlanejamentoControle atividadeC = new PlanejamentoControle();
 
-        // atividadeC.inserir(new AtividadeVO(1, "Teste", "teste", "TESTE", "NÂO"));
+        atividadeC.inserir(new AtividadeVO("Teste", "teste", "TESTE", "NÂO"));
     
-        atividadeC.listarTodas().forEach(atividade -> System.out.println(atividade.getNomeAtividade()));
+        atividadeC.listarAtividades().forEach(atividade -> System.out.println(atividade.getNomeAtividade()));
 
-        atividadeC.buscarAtividadesDoCanteiro(1).forEach(atividadesDoCanteiro -> System.out.println(atividadesDoCanteiro.getDataAtividade()));
+        atividadeC.buscarAtividadesDoCanteiro(1).forEach(a -> System.out.println(a.getAtividadeVO().getNomeAtividade()));
 
-        System.out.println(atividadeC.buscarPorId(1).getNomeAtividade());
+        System.out.println(atividadeC.buscarAtividadePorId(1).getNomeAtividade());
 
-        // atividadeC.atualizar(new AtividadeVO(1, "Teste", "teste", "TESTE TESTE", "NÃO"));
+        atividadeC.atualizar(new AtividadeVO(5, "Colheita", "Colheita manual dos produtos", "Realizar pela manhã", "Concluída"));
 
-        // atividadeC.deletar(1);
+        atividadeC.deletarAtividade(6);
 
         AtividadeComMateriaisVO atividade = atividadeC.buscarAtividadeComMateriais(4);
 
         atividade.getMateriais().forEach(material -> System.out.println(material.getMaterial().getNome()));
-
-        List<AtividadeNoCanteiroVO> atividadeNoCanteiro = atividadeC.buscarAtividadesDoCanteiro(1);
-
-        atividadeNoCanteiro.forEach(a -> System.out.println(a.getAtividadeVO().getNomeAtividade()));
     }
 }
