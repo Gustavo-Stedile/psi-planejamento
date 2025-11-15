@@ -1,6 +1,6 @@
 ALTER TABLE area ADD CONSTRAINT pk_area PRIMARY KEY (id);
 ALTER TABLE talhao ADD CONSTRAINT pk_talhao PRIMARY KEY (id, area_id);
-ALTER TABLE plano ADD CONSTRAINT pk_plano PRIMARY KEY (id, Especie_id);
+ALTER TABLE plano ADD CONSTRAINT pk_plano PRIMARY KEY (id, especie_id);
 ALTER TABLE canteiro ADD CONSTRAINT pk_canteiro PRIMARY KEY (id);
 ALTER TABLE atividade ADD CONSTRAINT pk_atividade PRIMARY KEY (id);
 ALTER TABLE atividade_canteiro ADD CONSTRAINT pk_canteiro_atividade PRIMARY KEY (canteiro_id, atividade_id);
@@ -32,7 +32,7 @@ ALTER TABLE talhao ADD CONSTRAINT fk_talhao_area
 
 -- plano constraints
 ALTER TABLE plano ADD CONSTRAINT fk_plano_talhao
-    FOREIGN KEY (talhao_id, talhao_area_id) REFERENCES talhao(id, area_id)
+    FOREIGN KEY (talhao_id) REFERENCES talhao(id)
     ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE plano ADD CONSTRAINT fk_plano_especie
@@ -41,7 +41,7 @@ ALTER TABLE plano ADD CONSTRAINT fk_plano_especie
 
 -- canteiro constraints
 ALTER TABLE canteiro ADD CONSTRAINT fk_canteiro_plano
-    FOREIGN KEY (plano_id, plano_especie_id) REFERENCES plano(id, especie_id)
+    FOREIGN KEY (plano_id) REFERENCES plano(id)
     ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- atividade_canteiro constraints

@@ -22,7 +22,6 @@ CREATE TABLE talhao (
 CREATE TABLE plano (
     id SERIAL,
     especie_id INTEGER NOT NULL,
-    talhao_area_id INTEGER NOT NULL,
     talhao_id INTEGER NOT NULL,
     nome_plano VARCHAR(255),
     descricao TEXT,
@@ -35,10 +34,9 @@ CREATE TABLE plano (
 
 CREATE TABLE canteiro (
     id SERIAL,
-    plano_especie_id INTEGER NOT NULL,
     plano_id INTEGER NOT NULL,
     nome VARCHAR(255),
-    area_canteriro_m2 FLOAT,
+    area_canteiro_m2 FLOAT,
     observacoes TEXT,
     kg_gerados FLOAT,
     ativo BOOLEAN
