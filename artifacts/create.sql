@@ -1,25 +1,72 @@
-CREATE TABLE Area(
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    nome VARCHAR(255) NOT NULL,
-    tipo_cultura VARCHAR(255) NOT NULL,
-    ph FLOAT NOT NULL DEFAULT 7
+CREATE TABLE area (
+    id SERIAL,
+    associado_id BIGINT NOT NULL,
+    nome VARCHAR(255),
+    area_total FLOAT,
+    area_utilizada FLOAT,
+    ph FLOAT,
+    area_m2 FLOAT
 );
 
-CREATE TABLE Atividade(
-    id INT PRIMARY KEY AUTO_INCREMENT, 
-    fk_area INT NOT NULL,
-
-    FOREIGN KEY (fk_area) REFERENCES Area(id)  
-    ON DELETE SET NULL
+CREATE TABLE talhao (
+    id SERIAL,
+    Area_id INTEGER NOT NULL,
+    nome VARCHAR(255),
+    area_talhao FLOAT,
+    observacoes TEXT,
+    status_2 VARCHAR(50)
 );
 
-
-CREATE TABLE Materiais(
-    id INT PRIMARY KEY AUTO_INCREMENT,
+CREATE TABLE plano (
+    id SERIAL,
+    Especie_id INTEGER NOT NULL,
+    Talhao_Area_id INTEGER NOT NULL,
+    Talhao_id INTEGER NOT NULL,
+    nome_plano VARCHAR(255),
+    descricao TEXT,
+    data_inicio DATE,
+    data_fim DATE,
+    observacoes TEXT,
+    area_cultivo FLOAT
 );
 
-CREATE TABLE Atividade_Materiais(
-    fk_atividade INT NOT NULL,
-    fk_materiais INT NOT NULL,
-    qtd_estimada FLOAT NOT NULL DEFAULT 0
+CREATE TABLE atividade (
+    id SERIAL,
+    nome_atividade VARCHAR(255),
+    descricao TEXT,
+    observacoes TEXT,
+    status_2 VARCHAR(50)
 );
+
+CREATE TABLE material (
+    id SERIAL,
+    associado_id BIGINT NOT NULL,
+    nome VARCHAR(255),
+    quantidade FLOAT,
+    unidade_medida VARCHAR(50)
+);
+
+CREATE TABLE atividade_has_Material (
+    Material_id INTEGER NOT NULL,
+    Atividade_id INTEGER NOT NULL,
+    quantidade_utilizada FLOAT
+);
+
+-- Fica com o grupo de Produção
+-- CREATE TABLE canteiro (
+--     id SERIAL,
+--     Plano_Especie_id INTEGER NOT NULL,
+--     Plano_id INTEGER NOT NULL,
+--     nome VARCHAR(255),
+--     area_canteriro_m2 FLOAT,
+--     observacoes TEXT,
+--     kg_gerados FLOAT
+-- );
+
+-- Fica com o grupo de Produção
+-- CREATE TABLE canteiro_has_Atividade (
+--     Canteiro_id INTEGER NOT NULL,
+--     Atividade_id INTEGER NOT NULL,
+--     tempo_gasto_horas FLOAT,
+--     data_atividade DATE
+-- );

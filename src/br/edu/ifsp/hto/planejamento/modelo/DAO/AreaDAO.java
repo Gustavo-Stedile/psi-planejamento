@@ -49,7 +49,7 @@ public class AreaDAO {
 
         try {
             Connection conn = ConexaoDoProjeto.connect();
-            String sql = "SELECT * FROM area WHERE ativo = true";
+            String sql = "SELECT * FROM area";
             PreparedStatement stmt = conn.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
 
