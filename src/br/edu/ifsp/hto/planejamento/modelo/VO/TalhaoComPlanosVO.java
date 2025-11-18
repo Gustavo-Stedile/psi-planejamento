@@ -1,12 +1,12 @@
 package br.edu.ifsp.hto.planejamento.modelo.VO;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class TalhaoComPlanosVO {
     private TalhaoVO talhao;
-    private ArrayList<PlanoVO> planos;
+    private List<PlanoVO> planos;
 
-    public TalhaoComPlanosVO(TalhaoVO talhao, ArrayList<PlanoVO> planos) {
+    public TalhaoComPlanosVO(TalhaoVO talhao, List<PlanoVO> planos) {
         this.talhao = talhao;
         this.planos = planos;
     }
@@ -19,11 +19,11 @@ public class TalhaoComPlanosVO {
         this.talhao = talhao;
     }
 
-    public ArrayList<PlanoVO> getPlanos() {
+    public List<PlanoVO> getPlanos() {
         return planos;
     }
 
-    public void setPlanos(ArrayList<PlanoVO> planos) {
+    public void setPlanos(List<PlanoVO> planos) {
         this.planos = planos;
     }
 }
