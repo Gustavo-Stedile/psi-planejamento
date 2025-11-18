@@ -1,12 +1,12 @@
 package br.edu.ifsp.hto.planejamento.modelo.VO;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class PlanoComCanteirosVO {
     private PlanoVO plano;
-    private ArrayList<CanteiroVO> canteiros;
+    private List<CanteiroVO> canteiros;
 
-    public PlanoComCanteirosVO(PlanoVO plano, ArrayList<CanteiroVO> canteiros) {
+    public PlanoComCanteirosVO(PlanoVO plano, List<CanteiroVO> canteiros) {
         this.plano = plano;
         this.canteiros = canteiros;
     }
@@ -19,11 +19,11 @@ public class PlanoComCanteirosVO {
         this.plano = plano;
     }
 
-    public ArrayList<CanteiroVO> getCanteiros() {
+    public List<CanteiroVO> getCanteiros() {
         return canteiros;
     }
 
-    public void setCanteiros(ArrayList<CanteiroVO> canteiros) {
+    public void setCanteiros(List<CanteiroVO> canteiros) {
         this.canteiros = canteiros;
     }
 }

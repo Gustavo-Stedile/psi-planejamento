@@ -1,10 +1,7 @@
 package br.edu.ifsp.hto.planejamento.modelo.tests;
 
-import java.util.List;
-
 import br.edu.ifsp.hto.planejamento.controle.PlanejamentoControle;
 import br.edu.ifsp.hto.planejamento.modelo.VO.AtividadeComMateriaisVO;
-import br.edu.ifsp.hto.planejamento.modelo.VO.AtividadeNoCanteiroVO;
 import br.edu.ifsp.hto.planejamento.modelo.VO.AtividadeVO;
 
 public class AtividadeDAOTest {

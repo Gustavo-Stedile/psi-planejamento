@@ -1,12 +1,12 @@
 package br.edu.ifsp.hto.planejamento.modelo.VO;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class AreaComTalhoesVO {
     private AreaVO area;
-    private ArrayList<TalhaoVO> talhoes;
+    private List<TalhaoVO> talhoes;
 
-    public AreaComTalhoesVO(AreaVO area, ArrayList<TalhaoVO> talhoes) {
+    public AreaComTalhoesVO(AreaVO area, List<TalhaoVO> talhoes) {
         this.area = area;
         this.talhoes = talhoes;
     }
@@ -19,11 +19,11 @@ public class AreaComTalhoesVO {
         this.area = area;
     }
 
-    public ArrayList<TalhaoVO> getTalhoes() {
+    public List<TalhaoVO> getTalhoes() {
         return talhoes;
     }
 
-    public void setTalhoes(ArrayList<TalhaoVO> talhoes) {
+    public void setTalhoes(List<TalhaoVO> talhoes) {
         this.talhoes = talhoes;
     }
 }
