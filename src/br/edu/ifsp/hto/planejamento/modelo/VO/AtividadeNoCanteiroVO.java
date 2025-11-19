@@ -3,15 +3,15 @@ package br.edu.ifsp.hto.planejamento.modelo.VO;
 import java.sql.Date;
 
 public class AtividadeNoCanteiroVO {
+    private AtividadeVO atividadeVO;
+    private float tempoGastoHoras;
+    private Date dataAtividade;
+
     public AtividadeNoCanteiroVO(AtividadeVO atividadeVO, float tempoGastoHoras, Date dataAtividade) {
         this.atividadeVO = atividadeVO;
         this.tempoGastoHoras = tempoGastoHoras;
         this.dataAtividade = dataAtividade;
     }
-
-    private AtividadeVO atividadeVO;
-    private float tempoGastoHoras;
-    private Date dataAtividade;
 
     public AtividadeVO getAtividadeVO() {
         return atividadeVO;
