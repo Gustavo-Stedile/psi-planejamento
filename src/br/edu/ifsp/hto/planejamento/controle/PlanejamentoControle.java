@@ -10,7 +10,6 @@ public class PlanejamentoControle {
 
     private AreaDAO areaDAO;
     private AtividadeDAO atividadeDAO;
-    private CanteiroDAO canteiroDAO;
     private MaterialDAO materialDAO;
     private PlanoDAO planoDAO;
     private TalhaoDAO talhaoDAO;
@@ -18,7 +17,6 @@ public class PlanejamentoControle {
     public PlanejamentoControle() {
         this.areaDAO = new AreaDAO();
         this.atividadeDAO = new AtividadeDAO();
-        this.canteiroDAO = new CanteiroDAO();
         this.materialDAO = new MaterialDAO();
         this.planoDAO = new PlanoDAO();
         this.talhaoDAO = new TalhaoDAO();
@@ -206,117 +204,6 @@ public class PlanejamentoControle {
         atividadeDAO.removerMaterial(materialId, atividadeId);
     }
 
-    // ---------------| CanteiroControle |---------------//
-
-    /**
-     * Adiciona um novo canteiro no banco de dados
-     * 
-     * @param canteiro objeto do tipo {@code CanteiroVO}
-     * 
-     * @see CanteiroDAO#inserir(CanteiroVO)
-     */
-    public void inserir(CanteiroVO canteiro) {
-        canteiroDAO.inserir(canteiro);
-    }
-
-    /**
-     * Adiciona uma atividade no canteiro
-     * 
-     * @param canteiroId identificador do canteiro
-     * @param atividadeId identificador da atividade
-     * @param tempoGastoHoras tempo a ser gasto na atividade
-     * @param dataAtividade data que será realizada a atividade
-     * 
-     * @see CanteiroDAO#adicionarAtividade(int, int, float, Date)
-     */
-    public void adicionarAtividade(int canteiroId, int atividadeId, float tempoGastoHoras, Date dataAtividade) {
-        canteiroDAO.adicionarAtividade(canteiroId, atividadeId, tempoGastoHoras, dataAtividade);
-    }
-
-    /**
-     * Lista todos os canteiros presentes no banco de dados
-     * 
-     * @return um {@code List} contendo {@code CanteiroVO} como elementos
-     * 
-     * @see CanteiroDAO#listarTodos()
-     */
-    public List<CanteiroVO> listarCanteiros() {
-        return canteiroDAO.listarTodos();
-    }
-
-    /**
-     * Busca um canteiro no banco de dados pelo id
-     * 
-     * @param id identificador do cabteiro
-     * 
-     * @return um objeto do tipo {@code CanteiroVO}
-     * 
-     * @see CanteiroDAO#buscarPorId(int)
-     */
-    public CanteiroVO buscarCanteiroPorId(int id) {
-        return canteiroDAO.buscarPorId(id);
-    }
-
-    /**
-     * Busca todos os canteiros pertencentes a um plano
-     * 
-     * @param id identificador do canteiro
-     * 
-     * @return um {@code List} contendo {@code CanteiroVO} como elementos
-     * 
-     * @see CanteiroDAO#buscarCanteirosDoPlano(int)
-     */
-    public List<CanteiroVO> buscarCanteiroDoPlano(int id) {
-        return canteiroDAO.buscarCanteirosDoPlano(id);
-    }
-
-    /**
-     * Busca um canteiro especifico que possue atividades
-     * 
-     * @param id identificador do canteiro
-     * 
-     * @return um objeto do tipo {@code CanteiroComAtividadesVO}
-     * 
-     * @see CanteiroDAO#buscarCanteiroComAtividades(int)
-     */
-    public CanteiroComAtividadesVO buscarCanteiroComAtividades(int id) {
-        return canteiroDAO.buscarCanteiroComAtividades(id);
-    }
-
-    /**
-     * Atualiza um canteiro presente no banco de dados
-     * 
-     * @param canteiro objeto {@code CanteiroVO} contendo os novos dados
-     * 
-     * @see CanteiroDAO#atualizar(CanteiroVO)
-     */
-    public void atualizar(CanteiroVO canteiro) {
-        canteiroDAO.atualizar(canteiro);
-    }
-
-    /**
-     * Deleta um canteiro presente no banco de dados
-     * 
-     * @param id identificador do canteiro a ser excluido
-     * 
-     * @see CanteiroDAO#deletar(int)
-     */
-    public void deletarCanteiro(int id) {
-        canteiroDAO.deletar(id);
-    }
-
-    /**
-     * Remove uma atividade de um canteiro específico
-     * 
-     * @param canteiroId identificador do canteiro
-     * @param atividadeId identificador da atividade
-     * 
-     * @see CanteiroDAO#removerAtividade(int, int)
-     */
-    public void removerAtividade(int canteiroId, int atividadeId) {
-        canteiroDAO.removerAtividade(canteiroId, atividadeId);
-    }
-
     // ---------------| MaterialControle |---------------//
 
     /**
@@ -437,19 +324,6 @@ public class PlanejamentoControle {
      */
     public List<PlanoVO> buscarPlanosDoTalhao(int id) {
         return planoDAO.buscarPlanosDoTalhao(id);
-    }
-
-    /**
-     * Busca um plano especifico que possue canteiros
-     * 
-     * @param id identificador do plano
-     * 
-     * @return um objeto do tipo {@code PlanoComCanteirosVO}
-     * 
-     * @see PlanoDAO#buscarPlanoComCanteiros(int)
-     */
-    public PlanoComCanteirosVO buscarPlanoComCanteiros(int id) {
-        return planoDAO.buscarPlanoComCanteiros(id);
     }
 
     /**
