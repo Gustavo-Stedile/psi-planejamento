@@ -5,29 +5,31 @@ CREATE TABLE area (
     area_total FLOAT,
     area_utilizada FLOAT,
     ph FLOAT,
-    area_m2 FLOAT
+    area_m2 FLOAT,
+    ativo BOOLEAN
 );
 
 CREATE TABLE talhao (
     id SERIAL,
-    Area_id INTEGER NOT NULL,
+    area_id INTEGER NOT NULL,
     nome VARCHAR(255),
     area_talhao FLOAT,
     observacoes TEXT,
-    status_2 VARCHAR(50)
+    status VARCHAR(50),
+    ativo BOOLEAN
 );
 
 CREATE TABLE plano (
     id SERIAL,
-    Especie_id INTEGER NOT NULL,
-    Talhao_Area_id INTEGER NOT NULL,
-    Talhao_id INTEGER NOT NULL,
+    especie_id INTEGER NOT NULL,
+    talhao_id INTEGER NOT NULL,
     nome_plano VARCHAR(255),
     descricao TEXT,
     data_inicio DATE,
     data_fim DATE,
     observacoes TEXT,
-    area_cultivo FLOAT
+    area_cultivo FLOAT,
+    ativo BOOLEAN
 );
 
 CREATE TABLE atividade (
@@ -35,7 +37,8 @@ CREATE TABLE atividade (
     nome_atividade VARCHAR(255),
     descricao TEXT,
     observacoes TEXT,
-    status_2 VARCHAR(50)
+    status VARCHAR(50),
+    ativo BOOLEAN
 );
 
 CREATE TABLE material (
@@ -43,30 +46,32 @@ CREATE TABLE material (
     associado_id BIGINT NOT NULL,
     nome VARCHAR(255),
     quantidade FLOAT,
-    unidade_medida VARCHAR(50)
+    unidade_medida VARCHAR(50),
+    ativo BOOLEAN
 );
 
-CREATE TABLE atividade_has_Material (
-    Material_id INTEGER NOT NULL,
-    Atividade_id INTEGER NOT NULL,
-    quantidade_utilizada FLOAT
+CREATE TABLE material_atividade ( --> atividade_has_material
+    material_id INTEGER NOT NULL,
+    atividade_id INTEGER NOT NULL,
+    quantidade_utilizada FLOAT,
+    ativo BOOLEAN
 );
 
 -- Fica com o grupo de Produção
 -- CREATE TABLE canteiro (
 --     id SERIAL,
---     Plano_Especie_id INTEGER NOT NULL,
---     Plano_id INTEGER NOT NULL,
+--     plano_id INTEGER NOT NULL,
 --     nome VARCHAR(255),
---     area_canteriro_m2 FLOAT,
+--     area_canteiro_m2 FLOAT,
 --     observacoes TEXT,
---     kg_gerados FLOAT
+--     kg_gerados FLOAT,
+--     ativo BOOLEAN
 -- );
 
--- Fica com o grupo de Produção
--- CREATE TABLE canteiro_has_Atividade (
+-- CREATE TABLE atividade_canteiro ( --> canteiro_has_atividade
 --     Canteiro_id INTEGER NOT NULL,
---     Atividade_id INTEGER NOT NULL,
+--     atividade_id INTEGER NOT NULL,
 --     tempo_gasto_horas FLOAT,
---     data_atividade DATE
+--     data_atividade DATE,
+--     ativo BOOLEAN
 -- );
